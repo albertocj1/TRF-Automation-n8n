@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Leave Request — Crowdsource Innovative Solutions</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f6f8;
+      min-height: 100vh;
+      color: #1a1a2e;
+    }
+
+    .topbar {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 0 32px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-mark {
+      width: 34px; height: 34px;
+      background: #2563eb;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: #fff;
+      letter-spacing: -0.5px; flex-shrink: 0;
+    }
+    .brand-name { font-size: 14px; font-weight: 600; color: #111827; }
+    .brand-sep  { width: 1px; height: 18px; background: #e5e7eb; margin: 0 4px; }
+    .brand-module { font-size: 13px; color: #6b7280; }
+
+    .page {
+      max-width: 640px;
+      margin: 40px auto;
+      padding: 0 20px 60px;
+    }
+    .page-heading { font-size: 20px; font-weight: 600; color: #111827; margin-bottom: 4px; }
+    .page-sub     { font-size: 13px; color: #6b7280; margin-bottom: 28px; }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 32px;
+    }
+
+    .section { margin-bottom: 28px; }
+    .section-title {
+      font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: #2563eb;
+      margin-bottom: 16px; padding-bottom: 8px;
+      border-bottom: 1px solid #eff0f2;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 480px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      .card { padding: 24px 18px; }
+    }
+
+    .field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+    .field:last-child { margin-bottom: 0; }
+
+    label { font-size: 12px; font-weight: 500; color: #374151; }
+    .req  { color: #2563eb; }
+
+    input, select, textarea {
+      background: #f9fafb;
+      border: 1px solid #d1d5db;
+      border-radius: 7px;
+      padding: 9px 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13.5px;
+      color: #111827;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      -webkit-appearance: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: #2563eb;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    }
+    input::placeholder, textarea::placeholder { color: #9ca3af; }
+
+    select {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 34px;
+    }
+    select option { background: #fff; color: #111827; }
+    textarea { resize: vertical; min-height: 84px; line-height: 1.55; }
+
+    /* PIN */
+    .pin-wrap { position: relative; }
+    .pin-wrap input { padding-right: 38px; letter-spacing: 3px; }
+    .pin-eye {
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer;
+      color: #9ca3af; font-size: 15px; padding: 2px; line-height: 1;
+      transition: color 0.15s;
+    }
+    .pin-eye:hover { color: #2563eb; }
+
+    /* File upload */
+    .file-drop {
+      border: 1.5px dashed #d1d5db;
+      border-radius: 7px;
+      background: #f9fafb;
+      padding: 20px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      position: relative;
+    }
+    .file-drop:hover, .file-drop.dragover {
+      border-color: #2563eb;
+      background: #eff6ff;
+    }
+    .file-drop input[type="file"] {
+      position: absolute; inset: 0;
+      opacity: 0; cursor: pointer;
+      width: 100%; height: 100%;
+      border: none; padding: 0; background: none;
+    }
+    .file-drop-icon { font-size: 22px; margin-bottom: 6px; display: block; }
+    .file-drop-text { font-size: 13px; color: #6b7280; line-height: 1.5; }
+    .file-drop-text strong { color: #2563eb; font-weight: 500; }
+    .file-drop-hint { font-size: 11px; color: #9ca3af; margin-top: 4px; }
+
+    /* File preview chip */
+    .file-chip {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 6px;
+      padding: 7px 10px;
+      font-size: 12px;
+      color: #1e40af;
+    }
+    .file-chip.show { display: flex; }
+    .file-chip-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .file-chip-remove {
+      background: none; border: none; cursor: pointer;
+      color: #93c5fd; font-size: 14px; line-height: 1; padding: 0;
+      transition: color 0.15s; flex-shrink: 0;
+    }
+    .file-chip-remove:hover { color: #1d4ed8; }
+
+    /* Submit */
+    .submit-row {
+      margin-top: 28px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .btn-submit {
+      width: 100%; padding: 11px 20px;
+      background: #2563eb; border: none; border-radius: 8px;
+      color: #fff; font-family: 'Inter', sans-serif;
+      font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: background 0.15s, transform 0.1s;
+    }
+    .btn-submit:hover   { background: #1d4ed8; }
+    .btn-submit:active  { transform: scale(0.99); }
+    .btn-submit:disabled { background: #93c5fd; cursor: not-allowed; }
+
+    .note { text-align: center; font-size: 11.5px; color: #9ca3af; }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #1f2937; color: #fff;
+      font-size: 13px; font-weight: 500;
+      padding: 11px 20px; border-radius: 8px;
+      display: flex; align-items: center; gap: 8px;
+      z-index: 999; opacity: 0;
+      transition: transform 0.35s ease, opacity 0.3s;
+      white-space: nowrap;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+    }
+    .toast.show    { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .toast.success { background: #166534; }
+    .toast.error   { background: #991b1b; }
+
+    .spinner {
+      display: inline-block; width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,0.35);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin 0.65s linear infinite;
+      vertical-align: middle; margin-right: 6px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="logo-mark">CIS</div>
+    <div class="brand-name">Crowdsource Innovative Solutions</div>
+    <div class="brand-sep"></div>
+    <div class="brand-module">Leave Management</div>
+  </div>
+
+  <div class="page">
+    <div class="page-heading">Leave Request</div>
+    <div class="page-sub">Fill out the form below to submit your leave application.</div>
+
+    <div class="card">
+      <form id="leaveForm" novalidate>
+
+        <!-- Employee Info -->
+        <div class="section">
+          <div class="section-title">Employee Information</div>
+          <div class="grid-2">
+            <div class="field">
+              <label>Full Name <span class="req">*</span></label>
+              <input type="text" id="employee_name" placeholder="Maria Beatrice Pedroche" required />
+            </div>
+            <div class="field">
+              <label>Employee PIN <span class="req">*</span></label>
+              <div class="pin-wrap">
+                <input type="password" id="employee_pin" placeholder="••••" maxlength="8" required />
+                <button type="button" class="pin-eye" onclick="togglePin(this)">👁</button>
+              </div>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label>Department <span class="req">*</span></label>
+              <select id="department" required>
+                <option value="" disabled selected>Select department</option>
+                <option value="HR">Human Resources</option>
+                <option value="Finance">Finance</option>
+                <option value="Engineering">Engineering</option>
+                <option value="Operations">Operations</option>
+                <option value="Sales">Sales</option>
+                <option value="Marketing">Marketing</option>
+                <option value="IT">IT</option>
+                <option value="Admin">Admin</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Job Title</label>
+              <input type="text" id="job_title" placeholder="e.g. HR Specialist" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Email Address <span class="req">*</span></label>
+            <input type="email" id="email" placeholder="your.email@company.com" required />
+          </div>
+        </div>
+
+        <!-- Leave Details -->
+        <div class="section">
+          <div class="section-title">Leave Details</div>
+          <div class="field">
+            <label>Leave Type <span class="req">*</span></label>
+            <select id="request_type" required>
+              <option value="" disabled selected>Select leave type</option>
+              <option value="Sick">Sick Leave</option>
+              <option value="Vacation">Vacation Leave</option>
+              <option value="Emergency">Emergency Leave</option>
+              <option value="Maternity">Maternity Leave</option>
+              <option value="Paternity">Paternity Leave</option>
+              <option value="Bereavement">Bereavement Leave</option>
+              <option value="Unpaid">Unpaid Leave</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label>Start Date & Time <span class="req">*</span></label>
+              <input type="datetime-local" id="start_time" required />
+            </div>
+            <div class="field">
+              <label>End Date & Time <span class="req">*</span></label>
+              <input type="datetime-local" id="end_time" required />
+            </div>
+          </div>
+          <div class="field">
+            <label>Reason / Notes</label>
+            <textarea id="reason" placeholder="Optional — briefly describe the reason for your leave…"></textarea>
+          </div>
+        </div>
+
+        <!-- Supporting Document -->
+        <div class="section" style="margin-bottom:0">
+          <div class="section-title">Supporting Document</div>
+          <div class="field" style="margin-bottom:0">
+            <label>Upload File <span style="color:#9ca3af;font-weight:400">(PDF, JPG, PNG — max 10MB)</span></label>
+            <div class="file-drop" id="fileDrop">
+              <input type="file" id="supporting_doc" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" />
+              <span class="file-drop-icon">📎</span>
+              <div class="file-drop-text"><strong>Click to upload</strong> or drag and drop</div>
+              <div class="file-drop-hint">PDF, JPG, PNG, DOC up to 10MB</div>
+            </div>
+            <div class="file-chip" id="fileChip">
+              <span>📄</span>
+              <span class="file-chip-name" id="fileName"></span>
+              <button type="button" class="file-chip-remove" onclick="clearFile()">✕</button>
+            </div>
+          </div>
+        </div>
+
+        <input type="hidden" id="company_id" value="1710054938201" />
+
+        <div class="submit-row">
+          <button type="submit" class="btn-submit" id="submitBtn">Submit Leave Request</button>
+          <div class="note">🔒 Securely submitted through Crowdsource HR systems</div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <span id="toastIcon"></span>
+    <span id="toastMsg"></span>
+  </div>
+
+  <script>
+    const WEBHOOK = "https://primary-production-a810.up.railway.app/webhook-test/ddeb7597-8a11-4502-bb87-6f0e803a1c5f";
+
+    // PIN toggle
+    function togglePin(btn) {
+      const input = document.getElementById('employee_pin');
+      const show = input.type === 'password';
+      input.type = show ? 'text' : 'password';
+      btn.textContent = show ? '🙈' : '👁';
+    }
+
+    // File input
+    const fileInput = document.getElementById('supporting_doc');
+    const fileDrop  = document.getElementById('fileDrop');
+    const fileChip  = document.getElementById('fileChip');
+    const fileName  = document.getElementById('fileName');
+
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files[0]) showFile(fileInput.files[0]);
+    });
+
+    fileDrop.addEventListener('dragover', e => { e.preventDefault(); fileDrop.classList.add('dragover'); });
+    fileDrop.addEventListener('dragleave', ()  => fileDrop.classList.remove('dragover'));
+    fileDrop.addEventListener('drop', e => {
+      e.preventDefault();
+      fileDrop.classList.remove('dragover');
+      const f = e.dataTransfer.files[0];
+      if (f) { fileInput.files = e.dataTransfer.files; showFile(f); }
+    });
+
+    function showFile(f) {
+      fileName.textContent = f.name;
+      fileChip.classList.add('show');
+      fileDrop.style.display = 'none';
+    }
+
+    function clearFile() {
+      fileInput.value = '';
+      fileChip.classList.remove('show');
+      fileDrop.style.display = '';
+    }
+
+    // Toast
+    function showToast(msg, type = 'success') {
+      const t = document.getElementById('toast');
+      document.getElementById('toastIcon').textContent = type === 'success' ? '✔' : '✖';
+      document.getElementById('toastMsg').textContent = msg;
+      t.className = `toast ${type} show`;
+      setTimeout(() => t.classList.remove('show'), 4500);
+    }
+
+    // Submit — sends multipart/form-data so n8n receives binary file
+    document.getElementById('leaveForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const get = id => document.getElementById(id).value.trim();
+
+      const values = {
+        employee_name: get('employee_name'),
+        employee_pin:  get('employee_pin'),
+        department:    get('department'),
+        job_title:     get('job_title'),
+        email:         get('email'),
+        request_type:  get('request_type'),
+        start_time:    get('start_time'),
+        end_time:      get('end_time'),
+        reason:        get('reason'),
+        company_id:    get('company_id'),
+      };
+
+      // Validation
+      if (!values.employee_name)  return showToast('Please enter your full name.', 'error');
+      if (!values.employee_pin)   return showToast('Please enter your PIN.', 'error');
+      if (!values.department)     return showToast('Please select your department.', 'error');
+      if (!values.email || !values.email.includes('@')) return showToast('Please enter a valid email.', 'error');
+      if (!values.request_type)   return showToast('Please select a leave type.', 'error');
+      if (!values.start_time)     return showToast('Please enter the start date & time.', 'error');
+      if (!values.end_time)       return showToast('Please enter the end date & time.', 'error');
+      if (new Date(values.end_time) <= new Date(values.start_time))
+        return showToast('End time must be after start time.', 'error');
+
+      // Build FormData — n8n reads all fields + the binary file
+      const fd = new FormData();
+      Object.entries(values).forEach(([k, v]) => {
+        // Convert datetimes to ISO
+        if (k === 'start_time' || k === 'end_time') {
+          fd.append(k, new Date(v).toISOString());
+        } else {
+          fd.append(k, v);
+        }
+      });
+
+      if (fileInput.files[0]) {
+        fd.append('supporting_doc', fileInput.files[0], fileInput.files[0].name);
+      }
+
+      const btn   = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>Submitting…';
+
+      try {
+        const res = await fetch(WEBHOOK, { method: 'POST', body: fd });
+        if (res.ok) {
+          showToast('Leave request submitted successfully!', 'success');
+          document.getElementById('leaveForm').reset();
+          clearFile();
+        } else {
+          showToast(`Submission failed (${res.status}). Please try again.`, 'error');
+        }
+      } catch {
+        showToast('Network error. Please check your connection.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Submit Leave Request';
+      }
+    });
+  </script>
+</body>
+</html>
