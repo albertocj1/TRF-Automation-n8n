@@ -7,202 +7,124 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #f5f6f8;
-      min-height: 100vh;
-      color: #1a1a2e;
-    }
-
-    .topbar {
-      background: #ffffff;
-      border-bottom: 1px solid #e5e7eb;
-      padding: 0 32px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .logo-mark {
-      width: 34px; height: 34px;
-      background: #2563eb;
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 700; color: #fff;
-      letter-spacing: -0.5px; flex-shrink: 0;
-    }
+    body { font-family: 'Inter', sans-serif; background: #f5f6f8; min-height: 100vh; color: #1a1a2e; }
+    .topbar { background: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 0 32px; height: 60px; display: flex; align-items: center; gap: 12px; }
+    .logo-mark { width: 34px; height: 34px; background: #2563eb; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; letter-spacing: -0.5px; flex-shrink: 0; }
     .brand-name { font-size: 14px; font-weight: 600; color: #111827; }
     .brand-sep  { width: 1px; height: 18px; background: #e5e7eb; margin: 0 4px; }
     .brand-module { font-size: 13px; color: #6b7280; }
-
-    .page {
-      max-width: 640px;
-      margin: 40px auto;
-      padding: 0 20px 60px;
-    }
+    .page { max-width: 640px; margin: 40px auto; padding: 0 20px 60px; }
     .page-heading { font-size: 20px; font-weight: 600; color: #111827; margin-bottom: 4px; }
-    .page-sub     { font-size: 13px; color: #6b7280; margin-bottom: 28px; }
-
-    .card {
-      background: #ffffff;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 32px;
-    }
-
+    .page-sub { font-size: 13px; color: #6b7280; margin-bottom: 28px; }
+    .card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 32px; }
     .section { margin-bottom: 28px; }
-    .section-title {
-      font-size: 11px; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 0.08em;
-      color: #2563eb;
-      margin-bottom: 16px; padding-bottom: 8px;
-      border-bottom: 1px solid #eff0f2;
-    }
-
+    .section-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #2563eb; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #eff0f2; }
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    @media (max-width: 480px) {
-      .grid-2 { grid-template-columns: 1fr; }
-      .card { padding: 24px 18px; }
-    }
-
+    @media (max-width: 480px) { .grid-2 { grid-template-columns: 1fr; } .card { padding: 24px 18px; } }
     .field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
     .field:last-child { margin-bottom: 0; }
-
     label { font-size: 12px; font-weight: 500; color: #374151; }
-    .req  { color: #2563eb; }
-
-    input, select, textarea {
-      background: #f9fafb;
-      border: 1px solid #d1d5db;
-      border-radius: 7px;
-      padding: 9px 12px;
-      font-family: 'Inter', sans-serif;
-      font-size: 13.5px;
-      color: #111827;
-      width: 100%;
-      outline: none;
-      transition: border-color 0.15s, box-shadow 0.15s;
-      -webkit-appearance: none;
-    }
-    input:focus, select:focus, textarea:focus {
-      border-color: #2563eb;
-      background: #fff;
-      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
-    }
+    .req { color: #2563eb; }
+    input, select, textarea { background: #f9fafb; border: 1px solid #d1d5db; border-radius: 7px; padding: 9px 12px; font-family: 'Inter', sans-serif; font-size: 13.5px; color: #111827; width: 100%; outline: none; transition: border-color 0.15s, box-shadow 0.15s; -webkit-appearance: none; }
+    input:focus, select:focus, textarea:focus { border-color: #2563eb; background: #fff; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
     input::placeholder, textarea::placeholder { color: #9ca3af; }
-
-    select {
-      cursor: pointer;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      padding-right: 34px;
-    }
+    input:disabled { background: #f3f4f6; color: #6b7280; cursor: not-allowed; border-color: #e5e7eb; }
+    select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 34px; }
     select option { background: #fff; color: #111827; }
     textarea { resize: vertical; min-height: 84px; line-height: 1.55; }
 
     /* PIN */
     .pin-wrap { position: relative; }
     .pin-wrap input { padding-right: 38px; letter-spacing: 3px; }
-    .pin-eye {
-      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
-      background: none; border: none; cursor: pointer;
-      color: #9ca3af; font-size: 15px; padding: 2px; line-height: 1;
-      transition: color 0.15s;
-    }
+    .pin-eye { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #9ca3af; font-size: 15px; padding: 2px; line-height: 1; transition: color 0.15s; }
     .pin-eye:hover { color: #2563eb; }
 
+    /* Verify button */
+    .verify-row { display: flex; gap: 8px; margin-top: 10px; }
+    .btn-verify { padding: 9px 16px; background: #2563eb; border: none; border-radius: 7px; color: #fff; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.15s; white-space: nowrap; flex-shrink: 0; }
+    .btn-verify:hover { background: #1d4ed8; }
+    .btn-verify:disabled { background: #93c5fd; cursor: not-allowed; }
+
+    /* Employee verified card */
+    .employee-card {
+      display: none;
+      margin-top: 12px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 14px 16px;
+      gap: 12px;
+    }
+    .employee-card.show { display: flex; align-items: flex-start; }
+    .employee-card-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+    .employee-card-info { flex: 1; }
+    .employee-card-name { font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 2px; }
+    .employee-card-meta { font-size: 12px; color: #6b7280; margin-bottom: 8px; }
+    .sil-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #fff; border: 1px solid #bbf7d0;
+      border-radius: 20px; padding: 4px 10px;
+      font-size: 12px; font-weight: 600; color: #166534;
+    }
+    .sil-badge.low { background: #fefce8; border-color: #fde68a; color: #92400e; }
+    .sil-badge.empty { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+
+    /* Error card */
+    .employee-error {
+      display: none;
+      margin-top: 10px;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 12.5px;
+      color: #991b1b;
+      font-weight: 500;
+    }
+    .employee-error.show { display: block; }
+
+    /* Loading */
+    .verify-loading { display: none; margin-top: 10px; font-size: 12px; color: #9ca3af; align-items: center; gap: 6px; }
+    .verify-loading.show { display: flex; }
+    .mini-spinner { display: inline-block; width: 11px; height: 11px; border: 2px solid #d1d5db; border-top-color: #2563eb; border-radius: 50%; animation: spin 0.65s linear infinite; }
+
     /* File upload */
-    .file-drop {
-      border: 1.5px dashed #d1d5db;
-      border-radius: 7px;
-      background: #f9fafb;
-      padding: 20px 16px;
-      text-align: center;
-      cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
-      position: relative;
-    }
-    .file-drop:hover, .file-drop.dragover {
-      border-color: #2563eb;
-      background: #eff6ff;
-    }
-    .file-drop input[type="file"] {
-      position: absolute; inset: 0;
-      opacity: 0; cursor: pointer;
-      width: 100%; height: 100%;
-      border: none; padding: 0; background: none;
-    }
+    .file-drop { border: 1.5px dashed #d1d5db; border-radius: 7px; background: #f9fafb; padding: 20px 16px; text-align: center; cursor: pointer; transition: border-color 0.15s, background 0.15s; position: relative; }
+    .file-drop:hover, .file-drop.dragover { border-color: #2563eb; background: #eff6ff; }
+    .file-drop input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; border: none; padding: 0; background: none; }
     .file-drop-icon { font-size: 22px; margin-bottom: 6px; display: block; }
     .file-drop-text { font-size: 13px; color: #6b7280; line-height: 1.5; }
     .file-drop-text strong { color: #2563eb; font-weight: 500; }
     .file-drop-hint { font-size: 11px; color: #9ca3af; margin-top: 4px; }
-
-    /* File preview chip */
-    .file-chip {
-      display: none;
-      align-items: center;
-      gap: 8px;
-      margin-top: 8px;
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      border-radius: 6px;
-      padding: 7px 10px;
-      font-size: 12px;
-      color: #1e40af;
-    }
+    .file-chip { display: none; align-items: center; gap: 8px; margin-top: 8px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 7px 10px; font-size: 12px; color: #1e40af; }
     .file-chip.show { display: flex; }
     .file-chip-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .file-chip-remove {
-      background: none; border: none; cursor: pointer;
-      color: #93c5fd; font-size: 14px; line-height: 1; padding: 0;
-      transition: color 0.15s; flex-shrink: 0;
-    }
+    .file-chip-remove { background: none; border: none; cursor: pointer; color: #93c5fd; font-size: 14px; line-height: 1; padding: 0; transition: color 0.15s; flex-shrink: 0; }
     .file-chip-remove:hover { color: #1d4ed8; }
 
-    /* Submit */
-    .submit-row {
-      margin-top: 28px;
-      display: flex; flex-direction: column; gap: 10px;
-    }
-    .btn-submit {
-      width: 100%; padding: 11px 20px;
-      background: #2563eb; border: none; border-radius: 8px;
-      color: #fff; font-family: 'Inter', sans-serif;
-      font-size: 14px; font-weight: 500;
-      cursor: pointer; transition: background 0.15s, transform 0.1s;
-    }
-    .btn-submit:hover   { background: #1d4ed8; }
-    .btn-submit:active  { transform: scale(0.99); }
+    /* Duration banner */
+    .duration-banner { display: none; align-items: center; gap: 10px; margin-top: 10px; padding: 10px 14px; border-radius: 8px; font-size: 12.5px; font-weight: 500; line-height: 1.4; }
+    .duration-banner.info { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+    .duration-banner.warning { background: #fefce8; border: 1px solid #fde68a; color: #92400e; }
+    .duration-banner.error { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+    .duration-banner.show { display: flex; }
+    .duration-banner-icon { font-size: 16px; flex-shrink: 0; }
+
+    /* Classification info */
+    .classification-info { background: #f8faff; border: 1px solid #e0e7ff; border-radius: 8px; padding: 12px 14px; margin-top: 4px; font-size: 12px; color: #4b5563; line-height: 1.6; }
+    .classification-info strong { color: #1e40af; }
+
+    .submit-row { margin-top: 28px; display: flex; flex-direction: column; gap: 10px; }
+    .btn-submit { width: 100%; padding: 11px 20px; background: #2563eb; border: none; border-radius: 8px; color: #fff; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.15s, transform 0.1s; }
+    .btn-submit:hover { background: #1d4ed8; }
+    .btn-submit:active { transform: scale(0.99); }
     .btn-submit:disabled { background: #93c5fd; cursor: not-allowed; }
-
     .note { text-align: center; font-size: 11.5px; color: #9ca3af; }
-
-    /* Toast */
-    .toast {
-      position: fixed; bottom: 24px; left: 50%;
-      transform: translateX(-50%) translateY(80px);
-      background: #1f2937; color: #fff;
-      font-size: 13px; font-weight: 500;
-      padding: 11px 20px; border-radius: 8px;
-      display: flex; align-items: center; gap: 8px;
-      z-index: 999; opacity: 0;
-      transition: transform 0.35s ease, opacity 0.3s;
-      white-space: nowrap;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.18);
-    }
-    .toast.show    { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #1f2937; color: #fff; font-size: 13px; font-weight: 500; padding: 11px 20px; border-radius: 8px; display: flex; align-items: center; gap: 8px; z-index: 999; opacity: 0; transition: transform 0.35s ease, opacity 0.3s; white-space: nowrap; box-shadow: 0 4px 16px rgba(0,0,0,0.18); }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     .toast.success { background: #166534; }
-    .toast.error   { background: #991b1b; }
-
-    .spinner {
-      display: inline-block; width: 14px; height: 14px;
-      border: 2px solid rgba(255,255,255,0.35);
-      border-top-color: #fff; border-radius: 50%;
-      animation: spin 0.65s linear infinite;
-      vertical-align: middle; margin-right: 6px;
-    }
+    .toast.error { background: #991b1b; }
+    .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.35); border-top-color: #fff; border-radius: 50%; animation: spin 0.65s linear infinite; vertical-align: middle; margin-right: 6px; }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
@@ -238,7 +160,37 @@
               </div>
             </div>
           </div>
-          <div class="grid-2">
+
+          <!-- Verify button -->
+          <div class="verify-row">
+            <button type="button" class="btn-verify" id="verifyBtn" onclick="verifyEmployee()">🔍 Verify Identity</button>
+          </div>
+
+          <!-- Loading -->
+          <div class="verify-loading" id="verifyLoading">
+            <span class="mini-spinner"></span>
+            <span>Verifying employee details…</span>
+          </div>
+
+          <!-- Employee verified card -->
+          <div class="employee-card" id="employeeCard">
+            <div class="employee-card-icon">✅</div>
+            <div class="employee-card-info">
+              <div class="employee-card-name" id="verifiedName"></div>
+              <div class="employee-card-meta" id="verifiedMeta"></div>
+              <div class="sil-badge" id="silBadge">
+                <span>🏖️</span>
+                <span id="silText"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Error -->
+          <div class="employee-error" id="employeeError">
+            ❌ Employee not found. Please check your name and PIN and try again.
+          </div>
+
+          <div class="grid-2" style="margin-top:16px">
             <div class="field">
               <label>Department <span class="req">*</span></label>
               <select id="department" required>
@@ -280,7 +232,33 @@
               <option value="Other">Other</option>
             </select>
           </div>
+
           <div class="grid-2">
+            <div class="field">
+              <label>Pay Status <span class="req">*</span></label>
+              <select id="pay_status" required>
+                <option value="" disabled selected>Select pay status</option>
+                <option value="Paid">Paid</option>
+                <option value="Unpaid">Unpaid</option>
+                <option value="N/A">N/A</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Excuse Status <span class="req">*</span></label>
+              <select id="excuse_status" required>
+                <option value="" disabled selected>Select excuse status</option>
+                <option value="Excused">Excused</option>
+                <option value="Unexcused">Unexcused</option>
+                <option value="N/A">N/A</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="classification-info" id="classificationInfo" style="display:none">
+            <span id="classificationText"></span>
+          </div>
+
+          <div class="grid-2" style="margin-top:14px">
             <div class="field">
               <label>Start Date & Time <span class="req">*</span></label>
               <input type="datetime-local" id="start_time" required />
@@ -290,7 +268,13 @@
               <input type="datetime-local" id="end_time" required />
             </div>
           </div>
-          <div class="field">
+
+          <div class="duration-banner" id="durationBanner">
+            <span class="duration-banner-icon" id="durationIcon"></span>
+            <span id="durationMsg"></span>
+          </div>
+
+          <div class="field" style="margin-top:14px">
             <label>Reason / Notes</label>
             <textarea id="reason" placeholder="Optional — briefly describe the reason for your leave…"></textarea>
           </div>
@@ -332,7 +316,10 @@
   </div>
 
   <script>
-    const WEBHOOK = "https://primary-production-a810.up.railway.app/webhook-test/ddeb7597-8a11-4502-bb87-6f0e803a1c5f";
+    const WEBHOOK       = "https://primary-production-a810.up.railway.app/webhook/ddeb7597-8a11-4502-bb87-6f0e803a1c5f";
+    const VERIFY_URL    = "https://primary-production-a810.up.railway.app/webhook/verify-employee";
+    const MAX_DAYS      = 14;
+    let   employeeVerified = false;
 
     // PIN toggle
     function togglePin(btn) {
@@ -342,36 +329,158 @@
       btn.textContent = show ? '🙈' : '👁';
     }
 
+    // Verify employee
+    async function verifyEmployee() {
+      const name = document.getElementById('employee_name').value.trim();
+      const pin  = document.getElementById('employee_pin').value.trim();
+
+      if (!name) return showToast('Please enter your full name first.', 'error');
+      if (!pin)  return showToast('Please enter your PIN first.', 'error');
+
+      const card    = document.getElementById('employeeCard');
+      const error   = document.getElementById('employeeError');
+      const loading = document.getElementById('verifyLoading');
+      const btn     = document.getElementById('verifyBtn');
+
+      card.classList.remove('show');
+      error.classList.remove('show');
+      loading.classList.add('show');
+      btn.disabled = true;
+      employeeVerified = false;
+
+      try {
+        const res  = await fetch(`${VERIFY_URL}?pin=${encodeURIComponent(pin)}`);
+        const data = await res.json();
+        loading.classList.remove('show');
+        btn.disabled = false;
+
+        if (data.found && data.name.trim().toLowerCase() === name.trim().toLowerCase()) {
+          // Match — populate fields
+          employeeVerified = true;
+
+          document.getElementById('verifiedName').textContent = data.name;
+          document.getElementById('verifiedMeta').textContent = `${data.job_title || '—'} · ${data.department || '—'}`;
+
+          const sil     = parseInt(data.sil) || 0;
+          const silBadge = document.getElementById('silBadge');
+          document.getElementById('silText').textContent = `${sil} SIL day${sil !== 1 ? 's' : ''} remaining`;
+          silBadge.className = sil === 0 ? 'sil-badge empty' : sil <= 2 ? 'sil-badge low' : 'sil-badge';
+
+          // Auto-fill fields
+          if (data.department) {
+            const deptMap = {
+              'Human Resources': 'HR', 'HR': 'HR',
+              'Finance': 'Finance', 'Engineering': 'Engineering',
+              'Operations': 'Operations', 'Sales': 'Sales',
+              'Marketing': 'Marketing', 'IT': 'IT', 'Admin': 'Admin'
+            };
+            const deptSelect = document.getElementById('department');
+            const mapped = deptMap[data.department] || data.department;
+            deptSelect.value = mapped;
+          }
+          if (data.job_title) document.getElementById('job_title').value = data.job_title;
+          if (data.email)     document.getElementById('email').value     = data.email;
+
+          card.classList.add('show');
+
+        } else if (data.found && data.name.trim().toLowerCase() !== name.trim().toLowerCase()) {
+          // PIN found but name doesn't match
+          error.textContent = '❌ Name does not match our records. Please check your name and PIN.';
+          error.classList.add('show');
+        } else {
+          // Not found
+          error.textContent = '❌ Employee not found. Please check your name and PIN and try again.';
+          error.classList.add('show');
+        }
+      } catch {
+        loading.classList.remove('show');
+        btn.disabled = false;
+        error.textContent = '❌ Could not verify at this time. Please try again.';
+        error.classList.add('show');
+      }
+    }
+
+    // Allow pressing Enter on PIN field to trigger verify
+    document.getElementById('employee_pin').addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); verifyEmployee(); }
+    });
+
+    // Reset verification if name or PIN changes
+    ['employee_name', 'employee_pin'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () => {
+        employeeVerified = false;
+        document.getElementById('employeeCard').classList.remove('show');
+        document.getElementById('employeeError').classList.remove('show');
+      });
+    });
+
+    // Classification info
+    function updateClassificationInfo() {
+      const pay    = document.getElementById('pay_status').value;
+      const excuse = document.getElementById('excuse_status').value;
+      const box    = document.getElementById('classificationInfo');
+      const text   = document.getElementById('classificationText');
+      if (!pay && !excuse) { box.style.display = 'none'; return; }
+      const parts = [];
+      if (pay === 'Paid')         parts.push('<strong>Paid</strong> — salary will be deducted from leave credits.');
+      if (pay === 'Unpaid')       parts.push('<strong>Unpaid</strong> — this leave will not be compensated.');
+      if (pay === 'N/A')          parts.push('<strong>Pay Status N/A</strong> — not applicable for this leave type.');
+      if (excuse === 'Excused')   parts.push('<strong>Excused</strong> — absence is officially acknowledged.');
+      if (excuse === 'Unexcused') parts.push('<strong>Unexcused</strong> — absence may be subject to disciplinary action.');
+      if (excuse === 'N/A')       parts.push('<strong>Excuse Status N/A</strong> — not applicable for this leave type.');
+      text.innerHTML = parts.join(' ');
+      box.style.display = 'block';
+    }
+
+    document.getElementById('pay_status').addEventListener('change', updateClassificationInfo);
+    document.getElementById('excuse_status').addEventListener('change', updateClassificationInfo);
+
     // File input
     const fileInput = document.getElementById('supporting_doc');
     const fileDrop  = document.getElementById('fileDrop');
     const fileChip  = document.getElementById('fileChip');
     const fileName  = document.getElementById('fileName');
 
-    fileInput.addEventListener('change', () => {
-      if (fileInput.files[0]) showFile(fileInput.files[0]);
-    });
-
+    fileInput.addEventListener('change', () => { if (fileInput.files[0]) showFile(fileInput.files[0]); });
     fileDrop.addEventListener('dragover', e => { e.preventDefault(); fileDrop.classList.add('dragover'); });
-    fileDrop.addEventListener('dragleave', ()  => fileDrop.classList.remove('dragover'));
+    fileDrop.addEventListener('dragleave', () => fileDrop.classList.remove('dragover'));
     fileDrop.addEventListener('drop', e => {
-      e.preventDefault();
-      fileDrop.classList.remove('dragover');
+      e.preventDefault(); fileDrop.classList.remove('dragover');
       const f = e.dataTransfer.files[0];
       if (f) { fileInput.files = e.dataTransfer.files; showFile(f); }
     });
+    function showFile(f) { fileName.textContent = f.name; fileChip.classList.add('show'); fileDrop.style.display = 'none'; }
+    function clearFile() { fileInput.value = ''; fileChip.classList.remove('show'); fileDrop.style.display = ''; }
 
-    function showFile(f) {
-      fileName.textContent = f.name;
-      fileChip.classList.add('show');
-      fileDrop.style.display = 'none';
+    // Duration checker
+    function checkDuration() {
+      const start  = document.getElementById('start_time').value;
+      const end    = document.getElementById('end_time').value;
+      const banner = document.getElementById('durationBanner');
+      const icon   = document.getElementById('durationIcon');
+      const msg    = document.getElementById('durationMsg');
+      if (!start || !end) { banner.className = 'duration-banner'; return; }
+      const startDate = new Date(start);
+      const endDate   = new Date(end);
+      if (endDate <= startDate) { banner.className = 'duration-banner'; return; }
+      const diffDays = (endDate - startDate) / (1000 * 60 * 60 * 24);
+      const rounded  = Math.ceil(diffDays);
+      if (diffDays > MAX_DAYS) {
+        icon.textContent = '🚫';
+        msg.textContent  = `Leave duration is ${rounded} day${rounded > 1 ? 's' : ''} — exceeds the 14-day maximum. Please adjust your dates or contact HR.`;
+        banner.className = 'duration-banner error show';
+      } else if (diffDays > 7) {
+        icon.textContent = '⚠️';
+        msg.textContent  = `Leave duration is ${rounded} day${rounded > 1 ? 's' : ''} — approaching the 14-day limit.`;
+        banner.className = 'duration-banner warning show';
+      } else {
+        icon.textContent = '📅';
+        msg.textContent  = `Leave duration: ${rounded} day${rounded > 1 ? 's' : ''}.`;
+        banner.className = 'duration-banner info show';
+      }
     }
-
-    function clearFile() {
-      fileInput.value = '';
-      fileChip.classList.remove('show');
-      fileDrop.style.display = '';
-    }
+    document.getElementById('start_time').addEventListener('change', checkDuration);
+    document.getElementById('end_time').addEventListener('change', checkDuration);
 
     // Toast
     function showToast(msg, type = 'success') {
@@ -382,10 +491,12 @@
       setTimeout(() => t.classList.remove('show'), 4500);
     }
 
-    // Submit — sends multipart/form-data so n8n receives binary file
+    // Submit
     document.getElementById('leaveForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const get = id => document.getElementById(id).value.trim();
+
+      if (!employeeVerified) return showToast('Please verify your identity first.', 'error');
 
       const values = {
         employee_name: get('employee_name'),
@@ -394,39 +505,40 @@
         job_title:     get('job_title'),
         email:         get('email'),
         request_type:  get('request_type'),
+        pay_status:    get('pay_status'),
+        excuse_status: get('excuse_status'),
         start_time:    get('start_time'),
         end_time:      get('end_time'),
         reason:        get('reason'),
         company_id:    get('company_id'),
       };
 
-      // Validation
       if (!values.employee_name)  return showToast('Please enter your full name.', 'error');
       if (!values.employee_pin)   return showToast('Please enter your PIN.', 'error');
       if (!values.department)     return showToast('Please select your department.', 'error');
       if (!values.email || !values.email.includes('@')) return showToast('Please enter a valid email.', 'error');
       if (!values.request_type)   return showToast('Please select a leave type.', 'error');
+      if (!values.pay_status)     return showToast('Please select a pay status.', 'error');
+      if (!values.excuse_status)  return showToast('Please select an excuse status.', 'error');
       if (!values.start_time)     return showToast('Please enter the start date & time.', 'error');
       if (!values.end_time)       return showToast('Please enter the end date & time.', 'error');
       if (new Date(values.end_time) <= new Date(values.start_time))
         return showToast('End time must be after start time.', 'error');
 
-      // Build FormData — n8n reads all fields + the binary file
+      const diffDays = (new Date(values.end_time) - new Date(values.start_time)) / (1000 * 60 * 60 * 24);
+      if (diffDays > MAX_DAYS) return showToast('Leave duration exceeds 14 days. Please adjust your dates.', 'error');
+
       const fd = new FormData();
       Object.entries(values).forEach(([k, v]) => {
-        // Convert datetimes to ISO
         if (k === 'start_time' || k === 'end_time') {
           fd.append(k, new Date(v).toISOString());
         } else {
           fd.append(k, v);
         }
       });
+      if (fileInput.files[0]) fd.append('supporting_doc', fileInput.files[0], fileInput.files[0].name);
 
-      if (fileInput.files[0]) {
-        fd.append('supporting_doc', fileInput.files[0], fileInput.files[0].name);
-      }
-
-      const btn   = document.getElementById('submitBtn');
+      const btn = document.getElementById('submitBtn');
       btn.disabled = true;
       btn.innerHTML = '<span class="spinner"></span>Submitting…';
 
@@ -436,6 +548,11 @@
           showToast('Leave request submitted successfully!', 'success');
           document.getElementById('leaveForm').reset();
           clearFile();
+          employeeVerified = false;
+          document.getElementById('employeeCard').classList.remove('show');
+          document.getElementById('employeeError').classList.remove('show');
+          document.getElementById('durationBanner').className = 'duration-banner';
+          document.getElementById('classificationInfo').style.display = 'none';
         } else {
           showToast(`Submission failed (${res.status}). Please try again.`, 'error');
         }
