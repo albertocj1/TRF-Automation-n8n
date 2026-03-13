@@ -46,47 +46,28 @@
     .btn-verify:disabled { background: #93c5fd; cursor: not-allowed; }
 
     /* Employee verified card */
-    .employee-card {
-      display: none;
-      margin-top: 12px;
-      background: #f0fdf4;
-      border: 1px solid #bbf7d0;
-      border-radius: 10px;
-      padding: 14px 16px;
-      gap: 12px;
-    }
+    .employee-card { display: none; margin-top: 12px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 14px 16px; gap: 12px; }
     .employee-card.show { display: flex; align-items: flex-start; }
     .employee-card-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
     .employee-card-info { flex: 1; }
     .employee-card-name { font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 2px; }
     .employee-card-meta { font-size: 12px; color: #6b7280; margin-bottom: 8px; }
-    .sil-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: #fff; border: 1px solid #bbf7d0;
-      border-radius: 20px; padding: 4px 10px;
-      font-size: 12px; font-weight: 600; color: #166534;
-    }
+    .sil-badge { display: inline-flex; align-items: center; gap: 6px; background: #fff; border: 1px solid #bbf7d0; border-radius: 20px; padding: 4px 10px; font-size: 12px; font-weight: 600; color: #166534; }
     .sil-badge.low { background: #fefce8; border-color: #fde68a; color: #92400e; }
     .sil-badge.empty { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
 
     /* Error card */
-    .employee-error {
-      display: none;
-      margin-top: 10px;
-      background: #fef2f2;
-      border: 1px solid #fecaca;
-      border-radius: 8px;
-      padding: 10px 14px;
-      font-size: 12.5px;
-      color: #991b1b;
-      font-weight: 500;
-    }
+    .employee-error { display: none; margin-top: 10px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 10px 14px; font-size: 12.5px; color: #991b1b; font-weight: 500; }
     .employee-error.show { display: block; }
 
     /* Loading */
     .verify-loading { display: none; margin-top: 10px; font-size: 12px; color: #9ca3af; align-items: center; gap: 6px; }
     .verify-loading.show { display: flex; }
     .mini-spinner { display: inline-block; width: 11px; height: 11px; border: 2px solid #d1d5db; border-top-color: #2563eb; border-radius: 50%; animation: spin 0.65s linear infinite; }
+
+    /* Credits info box */
+    .credits-info { display: none; margin-top: 6px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #1e40af; line-height: 1.5; }
+    .credits-info.show { display: block; }
 
     /* File upload */
     .file-drop { border: 1.5px dashed #d1d5db; border-radius: 7px; background: #f9fafb; padding: 20px 16px; text-align: center; cursor: pointer; transition: border-color 0.15s, background 0.15s; position: relative; }
@@ -109,10 +90,6 @@
     .duration-banner.error { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
     .duration-banner.show { display: flex; }
     .duration-banner-icon { font-size: 16px; flex-shrink: 0; }
-
-    /* Classification info */
-    .classification-info { background: #f8faff; border: 1px solid #e0e7ff; border-radius: 8px; padding: 12px 14px; margin-top: 4px; font-size: 12px; color: #4b5563; line-height: 1.6; }
-    .classification-info strong { color: #1e40af; }
 
     .submit-row { margin-top: 28px; display: flex; flex-direction: column; gap: 10px; }
     .btn-submit { width: 100%; padding: 11px 20px; background: #2563eb; border: none; border-radius: 8px; color: #fff; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.15s, transform 0.1s; }
@@ -161,18 +138,15 @@
             </div>
           </div>
 
-          <!-- Verify button -->
           <div class="verify-row">
             <button type="button" class="btn-verify" id="verifyBtn" onclick="verifyEmployee()">🔍 Verify Identity</button>
           </div>
 
-          <!-- Loading -->
           <div class="verify-loading" id="verifyLoading">
             <span class="mini-spinner"></span>
             <span>Verifying employee details…</span>
           </div>
 
-          <!-- Employee verified card -->
           <div class="employee-card" id="employeeCard">
             <div class="employee-card-icon">✅</div>
             <div class="employee-card-info">
@@ -185,10 +159,7 @@
             </div>
           </div>
 
-          <!-- Error -->
-          <div class="employee-error" id="employeeError">
-            ❌ Employee not found. Please check your name and PIN and try again.
-          </div>
+          <div class="employee-error" id="employeeError"></div>
 
           <div class="grid-2" style="margin-top:16px">
             <div class="field">
@@ -197,6 +168,7 @@
                 <option value="" disabled selected>Select department</option>
                 <option value="HR">Human Resources</option>
                 <option value="Finance">Finance</option>
+                <option value="Engineering">Engineering</option>
                 <option value="Operations">Operations</option>
                 <option value="Sales">Sales</option>
                 <option value="Marketing">Marketing</option>
@@ -233,32 +205,17 @@
             </select>
           </div>
 
-          <div class="grid-2">
-            <div class="field">
-              <label>Pay Status <span class="req">*</span></label>
-              <select id="pay_status" required>
-                <option value="" disabled selected>Select pay status</option>
-                <option value="Paid">Paid</option>
-                <option value="Unpaid">Unpaid</option>
-                <option value="N/A">N/A</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>Excuse Status <span class="req">*</span></label>
-              <select id="excuse_status" required>
-                <option value="" disabled selected>Select excuse status</option>
-                <option value="Excused">Excused</option>
-                <option value="Unexcused">Unexcused</option>
-                <option value="N/A">N/A</option>
-              </select>
-            </div>
+          <div class="field">
+            <label>Use Leave Credits? <span class="req">*</span></label>
+            <select id="use_credits" required onchange="updateCreditsInfo()">
+              <option value="" disabled selected>Select an option</option>
+              <option value="Yes">Yes — deduct from my leave credits</option>
+              <option value="No">No — do not use leave credits</option>
+            </select>
+            <div class="credits-info" id="creditsInfo"></div>
           </div>
 
-          <div class="classification-info" id="classificationInfo" style="display:none">
-            <span id="classificationText"></span>
-          </div>
-
-          <div class="grid-2" style="margin-top:14px">
+          <div class="grid-2" style="margin-top:6px">
             <div class="field">
               <label>Start Date & Time <span class="req">*</span></label>
               <input type="datetime-local" id="start_time" required />
@@ -316,10 +273,11 @@
   </div>
 
   <script>
-    const WEBHOOK       = "https://primary-production-a810.up.railway.app/webhook/ddeb7597-8a11-4502-bb87-6f0e803a1c5f";
-    const VERIFY_URL    = "https://primary-production-a810.up.railway.app/webhook/verify-employee";
-    const MAX_DAYS      = 14;
+    const WEBHOOK    = "https://primary-production-a810.up.railway.app/webhook/ddeb7597-8a11-4502-bb87-6f0e803a1c5f";
+    const VERIFY_URL = "https://primary-production-a810.up.railway.app/webhook/verify-employee";
+    const MAX_DAYS   = 14;
     let   employeeVerified = false;
+    let   currentSIL = 0;
 
     // PIN toggle
     function togglePin(btn) {
@@ -327,6 +285,21 @@
       const show = input.type === 'password';
       input.type = show ? 'text' : 'password';
       btn.textContent = show ? '🙈' : '👁';
+    }
+
+    // Credits info hint
+    function updateCreditsInfo() {
+      const val  = document.getElementById('use_credits').value;
+      const box  = document.getElementById('creditsInfo');
+      if (val === 'Yes') {
+        box.innerHTML = `🏖️ <strong>${currentSIL} SIL day${currentSIL !== 1 ? 's' : ''}</strong> currently available. Leave credits will be deducted upon approval.`;
+        box.className = 'credits-info show';
+      } else if (val === 'No') {
+        box.innerHTML = `ℹ️ Leave credits will <strong>not</strong> be deducted. This leave may be treated as unpaid depending on HR approval.`;
+        box.className = 'credits-info show';
+      } else {
+        box.className = 'credits-info';
+      }
     }
 
     // Verify employee
@@ -355,40 +328,28 @@
         btn.disabled = false;
 
         if (data.found && data.name.trim().toLowerCase() === name.trim().toLowerCase()) {
-          // Match — populate fields
           employeeVerified = true;
+          currentSIL = parseInt(data.sil) || 0;
 
           document.getElementById('verifiedName').textContent = data.name;
           document.getElementById('verifiedMeta').textContent = `${data.job_title || '—'} · ${data.department || '—'}`;
 
-          const sil     = parseInt(data.sil) || 0;
           const silBadge = document.getElementById('silBadge');
-          document.getElementById('silText').textContent = `${sil} SIL day${sil !== 1 ? 's' : ''} remaining`;
-          silBadge.className = sil === 0 ? 'sil-badge empty' : sil <= 2 ? 'sil-badge low' : 'sil-badge';
+          document.getElementById('silText').textContent = `${currentSIL} SIL day${currentSIL !== 1 ? 's' : ''} remaining`;
+          silBadge.className = currentSIL === 0 ? 'sil-badge empty' : currentSIL <= 2 ? 'sil-badge low' : 'sil-badge';
 
-          // Auto-fill fields
-          if (data.department) {
-            const deptMap = {
-              'Human Resources': 'HR', 'HR': 'HR',
-              'Finance': 'Finance', 'Engineering': 'Engineering',
-              'Operations': 'Operations', 'Sales': 'Sales',
-              'Marketing': 'Marketing', 'IT': 'IT', 'Admin': 'Admin'
-            };
-            const deptSelect = document.getElementById('department');
-            const mapped = deptMap[data.department] || data.department;
-            deptSelect.value = mapped;
-          }
-          if (data.job_title) document.getElementById('job_title').value = data.job_title;
-          if (data.email)     document.getElementById('email').value     = data.email;
+          const deptMap = { 'Human Resources': 'HR', 'HR': 'HR', 'Finance': 'Finance', 'Engineering': 'Engineering', 'Operations': 'Operations', 'Sales': 'Sales', 'Marketing': 'Marketing', 'IT': 'IT', 'Admin': 'Admin' };
+          if (data.department) document.getElementById('department').value = deptMap[data.department] || data.department;
+          if (data.job_title)  document.getElementById('job_title').value  = data.job_title;
+          if (data.email)      document.getElementById('email').value      = data.email;
 
           card.classList.add('show');
+          updateCreditsInfo(); // refresh credits hint with real SIL
 
-        } else if (data.found && data.name.trim().toLowerCase() !== name.trim().toLowerCase()) {
-          // PIN found but name doesn't match
+        } else if (data.found) {
           error.textContent = '❌ Name does not match our records. Please check your name and PIN.';
           error.classList.add('show');
         } else {
-          // Not found
           error.textContent = '❌ Employee not found. Please check your name and PIN and try again.';
           error.classList.add('show');
         }
@@ -400,40 +361,18 @@
       }
     }
 
-    // Allow pressing Enter on PIN field to trigger verify
     document.getElementById('employee_pin').addEventListener('keydown', e => {
       if (e.key === 'Enter') { e.preventDefault(); verifyEmployee(); }
     });
 
-    // Reset verification if name or PIN changes
     ['employee_name', 'employee_pin'].forEach(id => {
       document.getElementById(id).addEventListener('input', () => {
         employeeVerified = false;
+        currentSIL = 0;
         document.getElementById('employeeCard').classList.remove('show');
         document.getElementById('employeeError').classList.remove('show');
       });
     });
-
-    // Classification info
-    function updateClassificationInfo() {
-      const pay    = document.getElementById('pay_status').value;
-      const excuse = document.getElementById('excuse_status').value;
-      const box    = document.getElementById('classificationInfo');
-      const text   = document.getElementById('classificationText');
-      if (!pay && !excuse) { box.style.display = 'none'; return; }
-      const parts = [];
-      if (pay === 'Paid')         parts.push('<strong>Paid</strong> — salary will be deducted from leave credits.');
-      if (pay === 'Unpaid')       parts.push('<strong>Unpaid</strong> — this leave will not be compensated.');
-      if (pay === 'N/A')          parts.push('<strong>Pay Status N/A</strong> — not applicable for this leave type.');
-      if (excuse === 'Excused')   parts.push('<strong>Excused</strong> — absence is officially acknowledged.');
-      if (excuse === 'Unexcused') parts.push('<strong>Unexcused</strong> — absence may be subject to disciplinary action.');
-      if (excuse === 'N/A')       parts.push('<strong>Excuse Status N/A</strong> — not applicable for this leave type.');
-      text.innerHTML = parts.join(' ');
-      box.style.display = 'block';
-    }
-
-    document.getElementById('pay_status').addEventListener('change', updateClassificationInfo);
-    document.getElementById('excuse_status').addEventListener('change', updateClassificationInfo);
 
     // File input
     const fileInput = document.getElementById('supporting_doc');
@@ -505,23 +444,21 @@
         job_title:     get('job_title'),
         email:         get('email'),
         request_type:  get('request_type'),
-        pay_status:    get('pay_status'),
-        excuse_status: get('excuse_status'),
+        use_credits:   get('use_credits'),
         start_time:    get('start_time'),
         end_time:      get('end_time'),
         reason:        get('reason'),
         company_id:    get('company_id'),
       };
 
-      if (!values.employee_name)  return showToast('Please enter your full name.', 'error');
-      if (!values.employee_pin)   return showToast('Please enter your PIN.', 'error');
-      if (!values.department)     return showToast('Please select your department.', 'error');
+      if (!values.employee_name) return showToast('Please enter your full name.', 'error');
+      if (!values.employee_pin)  return showToast('Please enter your PIN.', 'error');
+      if (!values.department)    return showToast('Please select your department.', 'error');
       if (!values.email || !values.email.includes('@')) return showToast('Please enter a valid email.', 'error');
-      if (!values.request_type)   return showToast('Please select a leave type.', 'error');
-      if (!values.pay_status)     return showToast('Please select a pay status.', 'error');
-      if (!values.excuse_status)  return showToast('Please select an excuse status.', 'error');
-      if (!values.start_time)     return showToast('Please enter the start date & time.', 'error');
-      if (!values.end_time)       return showToast('Please enter the end date & time.', 'error');
+      if (!values.request_type)  return showToast('Please select a leave type.', 'error');
+      if (!values.use_credits)   return showToast('Please select whether to use leave credits.', 'error');
+      if (!values.start_time)    return showToast('Please enter the start date & time.', 'error');
+      if (!values.end_time)      return showToast('Please enter the end date & time.', 'error');
       if (new Date(values.end_time) <= new Date(values.start_time))
         return showToast('End time must be after start time.', 'error');
 
@@ -549,10 +486,11 @@
           document.getElementById('leaveForm').reset();
           clearFile();
           employeeVerified = false;
+          currentSIL = 0;
           document.getElementById('employeeCard').classList.remove('show');
           document.getElementById('employeeError').classList.remove('show');
           document.getElementById('durationBanner').className = 'duration-banner';
-          document.getElementById('classificationInfo').style.display = 'none';
+          document.getElementById('creditsInfo').className = 'credits-info';
         } else {
           showToast(`Submission failed (${res.status}). Please try again.`, 'error');
         }
