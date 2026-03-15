@@ -277,7 +277,6 @@
   </div>
 
   <script>
-    // ✅ PRODUCTION URL — ensure workflow Activate toggle is ON in n8n
     const WEBHOOK    = "https://primary-production-a810.up.railway.app/webhook-test/ddeb7597-8a11-4502-bb87-6f0e803a1c5f";
     const VERIFY_URL = "https://primary-production-a810.up.railway.app/webhook/verify-employee";
     const MAX_DAYS   = 14;
@@ -298,7 +297,7 @@
       const val = document.getElementById('use_credits').value;
       const box = document.getElementById('creditsInfo');
       if (val === 'Yes') {
-        box.innerHTML = `🏖️ <strong>${currentSIL} SIL day${currentSIL !== 1 ? 's' : ''}</strong> currently available. Leave credits will be deducted upon approval.`;
+        box.innerHTML = `🏖️ <strong>${currentSIL.toFixed(1)} SIL day${currentSIL !== 1 ? 's' : ''}</strong> currently available. Leave credits will be deducted upon approval.`;
         box.className = 'credits-info show';
       } else if (val === 'No') {
         box.innerHTML = `ℹ️ Leave credits will <strong>not</strong> be deducted. This leave may be treated as unpaid depending on HR approval.`;
@@ -335,16 +334,16 @@
 
         if (data.found && data.name.trim().toLowerCase() === name.trim().toLowerCase()) {
           employeeVerified = true;
-          currentSIL = parseInt(data.sil) || 0;
+          currentSIL = parseFloat(data.sil) || 0;
 
           document.getElementById('verifiedName').textContent = data.name;
           document.getElementById('verifiedMeta').textContent = `${data.job_title || '—'} · ${data.department || '—'}`;
 
           const silBadge = document.getElementById('silBadge');
-          document.getElementById('silText').textContent = `${currentSIL} SIL day${currentSIL !== 1 ? 's' : ''} remaining`;
+          document.getElementById('silText').textContent = `${currentSIL.toFixed(1)} SIL day${currentSIL !== 1 ? 's' : ''} remaining`;
           silBadge.className = currentSIL === 0 ? 'sil-badge empty' : currentSIL <= 2 ? 'sil-badge low' : 'sil-badge';
 
-          const deptMap = { 'Human Resources': 'HR', 'HR': 'HR', 'Finance': 'Finance', 'Engineering': 'Engineering', 'Operations': 'Operations', 'Sales': 'Sales', 'Marketing': 'Marketing', 'IT': 'IT', 'Admin': 'Admin' };
+          const deptMap = { 'Human Resources': 'HR', 'HR': 'HR', 'Finance': 'Finance', 'Engineering': 'Engineering', 'Operations': 'Operations', 'Sales': 'Sales', 'Marketing': 'Marketing', 'IT': 'IT', 'Admin': 'Admin', 'Accounting': 'Accounting', 'Productions': 'Productions' };
           if (data.department) document.getElementById('department').value = deptMap[data.department] || data.department;
           if (data.job_title)  document.getElementById('job_title').value  = data.job_title;
           if (data.email)      document.getElementById('email').value      = data.email;
@@ -478,7 +477,6 @@
         company_id:    get('company_id'),
       };
 
-      // Validation
       if (!values.employee_name)  return showToast('Please enter your full name.', 'error');
       if (!values.employee_pin)   return showToast('Please enter your PIN.', 'error');
       if (!values.department)     return showToast('Please select your department.', 'error');
@@ -493,7 +491,6 @@
       const diffDays = (new Date(values.end_time) - new Date(values.start_time)) / (1000 * 60 * 60 * 24);
       if (diffDays > MAX_DAYS) return showToast('Leave duration exceeds 14 days. Please adjust your dates.', 'error');
 
-      // Build FormData
       const fd = new FormData();
       Object.entries(values).forEach(([k, v]) => {
         if (k === 'start_time' || k === 'end_time') {
