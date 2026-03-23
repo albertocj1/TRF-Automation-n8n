@@ -54,7 +54,7 @@
     .topbar-right { margin-left: auto; }
 
     .dark-toggle { background: none; border: 1px solid var(--input-border); border-radius: 20px; padding: 5px 12px; cursor: pointer; font-size: 12px; font-weight: 500; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; transition: all 0.15s; font-family: 'Inter', sans-serif; }
-    .dark-toggle:hover { border-color: #2563eb; color: #2563eb; }
+    .dark-toggle:hover { border-color: #2FAAE1; color: #2FAAE1; }
 
     .page { max-width: 640px; margin: 40px auto; padding: 0 20px 60px; }
     .page-heading { font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
@@ -336,12 +336,12 @@
         <div class="section" style="margin-bottom:0">
           <div class="section-title">Supporting Document</div>
           <div class="field" style="margin-bottom:0">
-            <label>Upload File <span style="color:var(--note-color);font-weight:400">(PDF, JPG, PNG — max 10MB)</span></label>
+            <label>Upload File <span style="color:var(--note-color);font-weight:400">(PDF, PNG, DOC/DOCX — max 10MB)</span></label>
             <div class="file-drop" id="fileDrop">
-              <input type="file" id="supporting_doc" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" />
+              <input type="file" id="supporting_doc" accept=".pdf,.png,.doc,.docx" />
               <span class="file-drop-icon">📎</span>
               <div class="file-drop-text"><strong>Click to upload</strong> or drag and drop</div>
-              <div class="file-drop-hint">PDF, JPG, PNG, DOC up to 10MB</div>
+              <div class="file-drop-hint">PDF, PNG, DOC, DOCX — max 10MB</div>
             </div>
             <div class="file-chip" id="fileChip">
               <span>📄</span>
@@ -373,6 +373,14 @@
     const WEBHOOK    = "https://primary-production-a810.up.railway.app/webhook-test/ddeb7597-8a11-4502-bb87-6f0e803a1c5f";
     const VERIFY_URL = "https://primary-production-a810.up.railway.app/webhook/verify-employee";
     const MAX_DAYS   = 14;
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+    const ALLOWED_EXTS  = ['.pdf', '.png', '.doc', '.docx'];
+    const ALLOWED_TYPES = [
+      'application/pdf',
+      'image/png',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ];
 
     let employeeVerified = false;
     let currentSIL = 0;
@@ -395,6 +403,25 @@
       const show = input.type === 'password';
       input.type = show ? 'text' : 'password';
       btn.textContent = show ? '🙈' : '👁';
+    }
+
+    // ── File Validation ──
+    function validateFile(f) {
+      const ext = '.' + f.name.split('.').pop().toLowerCase();
+      if (!ALLOWED_EXTS.includes(ext)) {
+        showToast('Only PDF, PNG, DOC, and DOCX files are allowed.', 'error');
+        return false;
+      }
+      // Also check MIME type (but allow if empty — some OS don't report MIME for .doc)
+      if (f.type && !ALLOWED_TYPES.includes(f.type)) {
+        showToast('Only PDF, PNG, DOC, and DOCX files are allowed.', 'error');
+        return false;
+      }
+      if (f.size > MAX_FILE_SIZE) {
+        showToast('File must be 10MB or less.', 'error');
+        return false;
+      }
+      return true;
     }
 
     // ── SIL Amount Validation ──
@@ -591,7 +618,13 @@
     const fileName  = document.getElementById('fileName');
 
     fileInput.addEventListener('change', () => {
-      if (fileInput.files[0]) showFile(fileInput.files[0]);
+      if (fileInput.files[0]) {
+        if (!validateFile(fileInput.files[0])) {
+          fileInput.value = '';
+          return;
+        }
+        showFile(fileInput.files[0]);
+      }
     });
 
     fileDrop.addEventListener('dragover', e => { e.preventDefault(); fileDrop.classList.add('dragover'); });
@@ -600,7 +633,11 @@
       e.preventDefault();
       fileDrop.classList.remove('dragover');
       const f = e.dataTransfer.files[0];
-      if (f) { fileInput.files = e.dataTransfer.files; showFile(f); }
+      if (f) {
+        if (!validateFile(f)) return;
+        fileInput.files = e.dataTransfer.files;
+        showFile(f);
+      }
     });
 
     function showFile(f) {
@@ -669,6 +706,9 @@
         if (silAmt > currentSIL)
           return showToast(`You only have ${currentSIL.toFixed(1)} SIL day(s) available.`, 'error');
       }
+
+      // Final file validation at submit time
+      if (fileInput.files[0] && !validateFile(fileInput.files[0])) return;
 
       const fd = new FormData();
       Object.entries(values).forEach(([k, v]) => {
