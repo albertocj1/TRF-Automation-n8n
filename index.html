@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Leave Request — Crowdsource Innovative Solutions</title>
-  <link rel="icon" type="image/png" href="./crowdsource.png" />
+  <link rel="icon" type="image/x-icon" href="./favicon.ico" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -51,8 +51,8 @@
     body { font-family: 'Inter', sans-serif; background: var(--bg); min-height: 100vh; color: var(--text-primary); transition: background 0.2s, color 0.2s; }
 
     .topbar { background: var(--topbar-bg); border-bottom: 1px solid var(--topbar-border); padding: 0 32px; height: 60px; display: flex; align-items: center; gap: 12px; transition: background 0.2s, border-color 0.2s; }
-    .logo-mark { width: 34px; height: 34px; border-radius: 8px; overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: var(--brand); }
-    .logo-mark img { width: 100%; height: 100%; object-fit: contain; }
+    .logo-mark { width: 34px; height: 34px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .logo-mark img { width: 100%; height: 100%; object-fit: cover; }
     .brand-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
     .brand-sep  { width: 1px; height: 18px; background: var(--topbar-border); margin: 0 4px; }
     .brand-module { font-size: 13px; color: var(--text-secondary); }
@@ -176,7 +176,14 @@
 
   <div class="topbar">
     <div class="logo-mark">
-      <img src="./crowdsource.png" alt="CIS" onerror="this.parentElement.style.color='#fff';this.parentElement.style.fontSize='12px';this.parentElement.style.fontWeight='700';this.parentElement.innerHTML='CIS';" />
+      <img 
+      src="./favicon.ico" 
+      alt="CIS"
+      onerror="this.parentElement.style.color='#fff';
+               this.parentElement.style.fontSize='12px';
+               this.parentElement.style.fontWeight='700';
+               this.parentElement.innerHTML='CIS';" 
+    />
     </div>
     <div class="brand-name">Crowdsource Innovative Solutions</div>
     <div class="brand-sep"></div>
