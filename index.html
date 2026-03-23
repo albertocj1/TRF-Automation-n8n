@@ -9,7 +9,6 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* Light mode */
     :root {
       --bg: #f5f6f8;
       --topbar-bg: #ffffff;
@@ -27,7 +26,6 @@
       --note-color: #9ca3af;
     }
 
-    /* Dark mode */
     body.dark {
       --bg: #0f1117;
       --topbar-bg: #1a1d27;
@@ -54,9 +52,7 @@
     .brand-sep  { width: 1px; height: 18px; background: var(--topbar-border); margin: 0 4px; }
     .brand-module { font-size: 13px; color: var(--text-secondary); }
     .topbar-right { margin-left: auto; }
-    
 
-    /* Dark mode toggle */
     .dark-toggle { background: none; border: 1px solid var(--input-border); border-radius: 20px; padding: 5px 12px; cursor: pointer; font-size: 12px; font-weight: 500; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; transition: all 0.15s; font-family: 'Inter', sans-serif; }
     .dark-toggle:hover { border-color: #2563eb; color: #2563eb; }
 
@@ -108,6 +104,21 @@
     body.dark .credits-info { background: #1e1b4b; border-color: #3730a3; color: #a5b4fc; }
     .credits-info.show { display: block; }
 
+    .sil-amount-field { display: none; margin-top: 10px; }
+    .sil-amount-field.show { display: flex; flex-direction: column; gap: 5px; }
+    .sil-amount-hint { font-size: 11px; color: var(--note-color); margin-top: 4px; line-height: 1.5; }
+    .sil-amount-hint strong { color: var(--text-primary); }
+    .sil-input-wrap { position: relative; }
+    .sil-input-wrap input { padding-right: 60px; }
+    .sil-unit { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 12px; color: var(--text-secondary); font-weight: 500; pointer-events: none; }
+    .sil-remaining { display: none; margin-top: 6px; padding: 8px 12px; border-radius: 7px; font-size: 12px; font-weight: 500; }
+    .sil-remaining.ok   { display: block; background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+    .sil-remaining.warn { display: block; background: #fefce8; border: 1px solid #fde68a; color: #92400e; }
+    .sil-remaining.err  { display: block; background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+    body.dark .sil-remaining.ok   { background: #052e16; border-color: #166534; color: #86efac; }
+    body.dark .sil-remaining.warn { background: #422006; border-color: #92400e; color: #fde68a; }
+    body.dark .sil-remaining.err  { background: #450a0a; border-color: #991b1b; color: #fca5a5; }
+
     .employee-error { display: none; margin-top: 10px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 10px 14px; font-size: 12.5px; color: #991b1b; font-weight: 500; }
     body.dark .employee-error { background: #450a0a; border-color: #991b1b; color: #fca5a5; }
     .employee-error.show { display: block; }
@@ -116,7 +127,7 @@
     .verify-loading.show { display: flex; }
     .mini-spinner { display: inline-block; width: 11px; height: 11px; border: 2px solid var(--input-border); border-top-color: #2563eb; border-radius: 50%; animation: spin 0.65s linear infinite; }
 
-    .duration-banner { display: none; align-items: center; gap: 10px; margin-top: 10px; padding: 10px 14px; border-radius: 8px; font-size: 12.5px; font-weight: 500; line-height: 1.4; }
+    .duration-banner { display: none; align-items: center; gap: 10px; margin-top: 10px; margin-bottom: 14px; padding: 10px 14px; border-radius: 8px; font-size: 12.5px; font-weight: 500; line-height: 1.4; }
     .duration-banner.info    { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
     .duration-banner.warning { background: #fefce8; border: 1px solid #fde68a; color: #92400e; }
     .duration-banner.error   { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
@@ -180,6 +191,7 @@
     <div class="card">
       <form id="leaveForm" novalidate>
 
+        <!-- ── EMPLOYEE INFORMATION ── -->
         <div class="section">
           <div class="section-title">Employee Information</div>
           <div class="grid-2">
@@ -244,8 +256,11 @@
           </div>
         </div>
 
+        <!-- ── LEAVE DETAILS ── -->
         <div class="section">
           <div class="section-title">Leave Details</div>
+
+          <!-- 1. Leave Type -->
           <div class="field">
             <label>Leave Type <span class="req">*</span></label>
             <select id="request_type" required>
@@ -261,16 +276,7 @@
             </select>
           </div>
 
-          <div class="field">
-            <label>Use Leave Credits? <span class="req">*</span></label>
-            <select id="use_credits" required onchange="updateCreditsInfo()">
-              <option value="" disabled selected>Select an option</option>
-              <option value="Yes">Yes — deduct from my leave credits</option>
-              <option value="No">No — do not use leave credits</option>
-            </select>
-            <div class="credits-info" id="creditsInfo"></div>
-          </div>
-
+          <!-- 2. Start & End Date -->
           <div class="grid-2">
             <div class="field">
               <label>Start Date & Time <span class="req">*</span></label>
@@ -282,17 +288,51 @@
             </div>
           </div>
 
+          <!-- Duration Banner -->
           <div class="duration-banner" id="durationBanner">
             <span class="duration-banner-icon" id="durationIcon"></span>
             <span id="durationMsg"></span>
           </div>
 
-          <div class="field" style="margin-top:14px">
+          <!-- 3. Use Leave Credits -->
+          <div class="field">
+            <label>Use Leave Credits? <span class="req">*</span></label>
+            <select id="use_credits" required onchange="updateCreditsInfo()">
+              <option value="" disabled selected>Select an option</option>
+              <option value="Yes">Yes — deduct from my leave credits</option>
+              <option value="No">No — do not use leave credits</option>
+            </select>
+            <div class="credits-info" id="creditsInfo"></div>
+
+            <!-- SIL Amount Input — shown when Yes is selected -->
+            <div class="sil-amount-field" id="silAmountField">
+              <label>SIL Credits to Use <span class="req">*</span></label>
+              <div class="sil-input-wrap">
+                <input
+                  type="number"
+                  id="sil_amount"
+                  min="0.5"
+                  step="0.5"
+                  placeholder="e.g. 1.0"
+                  oninput="validateSilAmount()"
+                />
+                <span class="sil-unit">day(s)</span>
+              </div>
+              <div class="sil-amount-hint">
+                Enter in 0.5 increments. You have <strong id="silAvailable">0</strong> SIL day(s) available.
+              </div>
+              <div class="sil-remaining" id="silRemaining"></div>
+            </div>
+          </div>
+
+          <!-- 4. Reason -->
+          <div class="field" style="margin-bottom:0">
             <label>Reason / Notes</label>
             <textarea id="reason" placeholder="Optional — briefly describe the reason for your leave…"></textarea>
           </div>
         </div>
 
+        <!-- ── SUPPORTING DOCUMENT ── -->
         <div class="section" style="margin-bottom:0">
           <div class="section-title">Supporting Document</div>
           <div class="field" style="margin-bottom:0">
@@ -337,7 +377,7 @@
     let employeeVerified = false;
     let currentSIL = 0;
 
-    // Dark mode
+    // ── Dark mode ──
     function toggleDark() {
       const isDark = document.body.classList.toggle('dark');
       document.getElementById('darkIcon').textContent  = isDark ? '☀️' : '🌙';
@@ -357,20 +397,75 @@
       btn.textContent = show ? '🙈' : '👁';
     }
 
-    function updateCreditsInfo() {
-      const val = document.getElementById('use_credits').value;
-      const box = document.getElementById('creditsInfo');
-      if (val === 'Yes') {
-        box.innerHTML = `🏖️ <strong>${currentSIL.toFixed(1)} SIL day${currentSIL !== 1 ? 's' : ''}</strong> currently available. Leave credits will be deducted upon approval.`;
-        box.className = 'credits-info show';
-      } else if (val === 'No') {
-        box.innerHTML = `ℹ️ Leave credits will <strong>not</strong> be deducted. This leave may be treated as unpaid depending on HR approval.`;
-        box.className = 'credits-info show';
+    // ── SIL Amount Validation ──
+    function validateSilAmount() {
+      const silInput     = document.getElementById('sil_amount');
+      const silRemaining = document.getElementById('silRemaining');
+      const entered      = parseFloat(silInput.value) || 0;
+      const remaining    = currentSIL - entered;
+
+      if (entered <= 0) {
+        silInput.style.borderColor = '#dc2626';
+        silRemaining.className = 'sil-remaining err';
+        silRemaining.textContent = '⚠️ Please enter a valid amount greater than 0.';
+        return;
+      }
+      if (entered > currentSIL) {
+        silInput.style.borderColor = '#dc2626';
+        silRemaining.className = 'sil-remaining err';
+        silRemaining.textContent = `❌ Exceeds available balance. You only have ${currentSIL.toFixed(1)} SIL day(s).`;
+        return;
+      }
+      if ((entered * 2) % 1 !== 0) {
+        silInput.style.borderColor = '#f59e0b';
+        silRemaining.className = 'sil-remaining warn';
+        silRemaining.textContent = `⚠️ Please use 0.5 increments (e.g. 0.5, 1.0, 1.5).`;
+        return;
+      }
+      silInput.style.borderColor = '';
+      if (remaining <= 1) {
+        silRemaining.className = 'sil-remaining warn';
+        silRemaining.textContent = `⚠️ After deduction: ${remaining.toFixed(1)} SIL day(s) remaining.`;
       } else {
-        box.className = 'credits-info';
+        silRemaining.className = 'sil-remaining ok';
+        silRemaining.textContent = `✅ After deduction: ${remaining.toFixed(1)} SIL day(s) remaining.`;
       }
     }
 
+    // ── Credits Info ──
+    function updateCreditsInfo() {
+      const val          = document.getElementById('use_credits').value;
+      const box          = document.getElementById('creditsInfo');
+      const silField     = document.getElementById('silAmountField');
+      const silAvailable = document.getElementById('silAvailable');
+      const silInput     = document.getElementById('sil_amount');
+      const silRemaining = document.getElementById('silRemaining');
+
+      if (val === 'Yes') {
+        box.innerHTML = `🏖️ <strong>${currentSIL.toFixed(1)} SIL day${currentSIL !== 1 ? 's' : ''}</strong> currently available. Enter how many credits you want to use below.`;
+        box.className = 'credits-info show';
+        silField.className         = 'sil-amount-field show';
+        silAvailable.textContent   = currentSIL.toFixed(1);
+        silInput.max               = currentSIL;
+        silInput.value             = '';
+        silInput.style.borderColor = '';
+        silRemaining.className     = 'sil-remaining';
+      } else if (val === 'No') {
+        box.innerHTML = `ℹ️ Leave credits will <strong>not</strong> be deducted. This leave may be treated as unpaid depending on HR approval.`;
+        box.className = 'credits-info show';
+        silField.className         = 'sil-amount-field';
+        silInput.value             = '';
+        silInput.style.borderColor = '';
+        silRemaining.className     = 'sil-remaining';
+      } else {
+        box.className          = 'credits-info';
+        silField.className     = 'sil-amount-field';
+        silInput.value         = '';
+        silRemaining.className = 'sil-remaining';
+      }
+    }
+
+    // ── Verify Employee ──
     async function verifyEmployee() {
       const name = document.getElementById('employee_name').value.trim();
       const pin  = document.getElementById('employee_pin').value.trim();
@@ -407,13 +502,21 @@
           document.getElementById('silText').textContent = `${currentSIL.toFixed(1)} SIL day${currentSIL !== 1 ? 's' : ''} remaining`;
           silBadge.className = currentSIL === 0 ? 'sil-badge empty' : currentSIL <= 2 ? 'sil-badge low' : 'sil-badge';
 
-          const deptMap = { 'Human Resources': 'HR', 'HR': 'HR', 'Finance': 'Finance', 'Engineering': 'Engineering', 'Operations': 'Operations', 'Sales': 'Sales', 'Marketing': 'Marketing', 'IT': 'IT', 'Admin': 'Admin', 'Accounting': 'Accounting', 'Productions': 'Productions' };
+          const deptMap = {
+            'Human Resources': 'HR', 'HR': 'HR', 'Finance': 'Finance',
+            'Engineering': 'Engineering', 'Operations': 'Operations',
+            'Sales': 'Sales', 'Marketing': 'Marketing', 'IT': 'IT',
+            'Admin': 'Admin', 'Accounting': 'Accounting', 'Productions': 'Productions'
+          };
           if (data.department) document.getElementById('department').value = deptMap[data.department] || data.department;
           if (data.job_title)  document.getElementById('job_title').value  = data.job_title;
           if (data.email)      document.getElementById('email').value      = data.email;
 
           card.classList.add('show');
-          updateCreditsInfo();
+
+          if (document.getElementById('use_credits').value === 'Yes') {
+            updateCreditsInfo();
+          }
 
         } else if (data.found) {
           error.textContent = '❌ Name does not match our records. Please check your name and PIN.';
@@ -440,9 +543,13 @@
         currentSIL = 0;
         document.getElementById('employeeCard').classList.remove('show');
         document.getElementById('employeeError').classList.remove('show');
+        document.getElementById('silAmountField').className = 'sil-amount-field';
+        document.getElementById('sil_amount').value = '';
+        document.getElementById('silRemaining').className = 'sil-remaining';
       });
     });
 
+    // ── Duration check ──
     function checkDuration() {
       const start  = document.getElementById('start_time').value;
       const end    = document.getElementById('end_time').value;
@@ -477,6 +584,7 @@
     document.getElementById('start_time').addEventListener('change', checkDuration);
     document.getElementById('end_time').addEventListener('change', checkDuration);
 
+    // ── File upload ──
     const fileInput = document.getElementById('supporting_doc');
     const fileDrop  = document.getElementById('fileDrop');
     const fileChip  = document.getElementById('fileChip');
@@ -487,7 +595,7 @@
     });
 
     fileDrop.addEventListener('dragover', e => { e.preventDefault(); fileDrop.classList.add('dragover'); });
-    fileDrop.addEventListener('dragleave', ()  => fileDrop.classList.remove('dragover'));
+    fileDrop.addEventListener('dragleave', () => fileDrop.classList.remove('dragover'));
     fileDrop.addEventListener('drop', e => {
       e.preventDefault();
       fileDrop.classList.remove('dragover');
@@ -515,6 +623,7 @@
       setTimeout(() => t.classList.remove('show'), 4500);
     }
 
+    // ── Submit ──
     document.getElementById('leaveForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const get = id => document.getElementById(id).value.trim();
@@ -529,25 +638,37 @@
         email:         get('email'),
         request_type:  get('request_type'),
         use_credits:   get('use_credits'),
+        sil_amount:    get('sil_amount') || '0',
         start_time:    get('start_time'),
         end_time:      get('end_time'),
         reason:        get('reason'),
         company_id:    get('company_id'),
       };
 
-      if (!values.employee_name)  return showToast('Please enter your full name.', 'error');
-      if (!values.employee_pin)   return showToast('Please enter your PIN.', 'error');
-      if (!values.department)     return showToast('Please select your department.', 'error');
+      if (!values.employee_name) return showToast('Please enter your full name.', 'error');
+      if (!values.employee_pin)  return showToast('Please enter your PIN.', 'error');
+      if (!values.department)    return showToast('Please select your department.', 'error');
       if (!values.email || !values.email.includes('@')) return showToast('Please enter a valid email.', 'error');
-      if (!values.request_type)   return showToast('Please select a leave type.', 'error');
-      if (!values.use_credits)    return showToast('Please select whether to use leave credits.', 'error');
-      if (!values.start_time)     return showToast('Please enter the start date & time.', 'error');
-      if (!values.end_time)       return showToast('Please enter the end date & time.', 'error');
+      if (!values.request_type)  return showToast('Please select a leave type.', 'error');
+      if (!values.start_time)    return showToast('Please enter the start date & time.', 'error');
+      if (!values.end_time)      return showToast('Please enter the end date & time.', 'error');
       if (new Date(values.end_time) <= new Date(values.start_time))
         return showToast('End time must be after start time.', 'error');
 
       const diffDays = (new Date(values.end_time) - new Date(values.start_time)) / (1000 * 60 * 60 * 24);
       if (diffDays > MAX_DAYS) return showToast('Leave duration exceeds 14 days. Please adjust your dates.', 'error');
+
+      if (!values.use_credits) return showToast('Please select whether to use leave credits.', 'error');
+
+      if (values.use_credits === 'Yes') {
+        const silAmt = parseFloat(values.sil_amount) || 0;
+        if (silAmt <= 0)
+          return showToast('Please enter how many SIL credits to use.', 'error');
+        if ((silAmt * 2) % 1 !== 0)
+          return showToast('SIL amount must be in 0.5 increments (e.g. 0.5, 1.0, 1.5).', 'error');
+        if (silAmt > currentSIL)
+          return showToast(`You only have ${currentSIL.toFixed(1)} SIL day(s) available.`, 'error');
+      }
 
       const fd = new FormData();
       Object.entries(values).forEach(([k, v]) => {
@@ -578,6 +699,9 @@
           document.getElementById('employeeError').classList.remove('show');
           document.getElementById('durationBanner').className = 'duration-banner';
           document.getElementById('creditsInfo').className = 'credits-info';
+          document.getElementById('silAmountField').className = 'sil-amount-field';
+          document.getElementById('sil_amount').value = '';
+          document.getElementById('silRemaining').className = 'sil-remaining';
         } else {
           showToast(`Submission failed (${res.status}). Please try again.`, 'error');
         }
