@@ -1,0 +1,3892 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Payroll Sheet (TEST ENVIRONMENT)</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                --color-primary: #29aae1;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: "Inter", "Open Sans", sans-serif;
+                background-color: var(--color-primary);
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                min-height: 100vh;
+                padding: 40px 20px;
+            }
+
+            .container {
+                background-color: #ffffff;
+                border-radius: 16px;
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+                padding: 40px;
+                width: 100%;
+                max-width: 1200px;
+            }
+
+            h2 {
+                text-align: center;
+                color: #333333;
+                margin-bottom: 30px;
+                font-weight: 600;
+            }
+
+            .subtitle {
+                text-align: center;
+                color: #666666;
+                margin-top: -20px;
+                margin-bottom: 30px;
+                font-size: 13px;
+                font-weight: 500;
+            }
+
+            /* Action buttons section */
+            .actions {
+                display: flex;
+                gap: 12px;
+                margin-bottom: 20px;
+                flex-wrap: wrap;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                border: none;
+                border-radius: 8px;
+                font-size: 14px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                font-family: inherit;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .btn .material-symbols-outlined {
+                font-size: 18px;
+            }
+
+            .btn-primary {
+                background-color: var(--color-primary);
+                color: #ffffff;
+            }
+
+            .btn-primary:hover {
+                filter: brightness(1.1);
+            }
+
+            .btn-secondary {
+                background-color: #6c757d;
+                color: #ffffff;
+            }
+
+            .btn-secondary:hover {
+                background-color: #5a6268;
+            }
+
+            .btn:active {
+                transform: scale(0.98);
+            }
+
+            .btn:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+
+            /* Modal styles */
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgba(0, 0, 0, 0.5);
+                animation: fadeIn 0.2s ease;
+            }
+
+            .modal.show {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                }
+
+                to {
+                    opacity: 1;
+                }
+            }
+
+            .modal-content {
+                background-color: #ffffff;
+                border-radius: 16px;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+                width: 90%;
+                max-width: 900px;
+                max-height: 80vh;
+                display: flex;
+                flex-direction: column;
+                animation: slideIn 0.3s ease;
+            }
+
+            @keyframes slideIn {
+                from {
+                    transform: translateY(-50px);
+                    opacity: 0;
+                }
+
+                to {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+
+            .modal-header {
+                padding: 24px 30px;
+                border-bottom: 1px solid #e0e0e0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .modal-header h3 {
+                margin: 0;
+                color: #333333;
+                font-size: 20px;
+                font-weight: 600;
+            }
+
+            .modal-close {
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 4px;
+                color: #666666;
+                transition: color 0.2s ease;
+            }
+
+            .modal-close:hover {
+                color: #333333;
+            }
+
+            .modal-close .material-symbols-outlined {
+                font-size: 24px;
+            }
+
+            .modal-body {
+                padding: 24px 30px;
+                overflow-y: auto;
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .modal-loading {
+                text-align: center;
+                padding: 40px;
+                color: #666666;
+            }
+
+            .modal-error {
+                text-align: center;
+                padding: 40px;
+                color: #d32f2f;
+            }
+
+            .modal-table-wrapper {
+                overflow-x: auto;
+                overflow-y: auto;
+                flex: 1;
+                position: relative;
+            }
+
+            /* Sticky scrollbar */
+            .modal-table-wrapper::-webkit-scrollbar {
+                height: 12px;
+            }
+
+            .modal-table-wrapper::-webkit-scrollbar-track {
+                background: #f1f1f1;
+                border-radius: 6px;
+            }
+
+            .modal-table-wrapper::-webkit-scrollbar-thumb {
+                background: #888;
+                border-radius: 6px;
+            }
+
+            .modal-table-wrapper::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+
+            .modal-table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 14px;
+            }
+
+            .modal-table th,
+            .modal-table td {
+                padding: 12px;
+                text-align: left;
+                border: 1px solid #e0e0e0;
+            }
+
+            .modal-table th {
+                background-color: #f8f8f8;
+                font-weight: 600;
+                color: #333333;
+                white-space: nowrap;
+                position: sticky;
+                top: 0;
+                z-index: 10;
+            }
+
+            .modal-table td {
+                background-color: #ffffff;
+            }
+
+            .modal-table tbody tr:nth-child(even) td {
+                background-color: #fafafa;
+            }
+
+            .modal-table input[type="number"] {
+                width: 80px;
+                padding: 6px 8px;
+                border: 1px solid #dddddd;
+                border-radius: 4px;
+                font-size: 14px;
+                font-family: inherit;
+            }
+
+            .modal-table input[type="number"]:focus {
+                outline: none;
+                border-color: var(--color-primary);
+            }
+
+            .modal-table .readonly-cell {
+                color: #666666;
+            }
+
+            .modal-table .empty-row {
+                background-color: #f5f5f5;
+                color: #999999;
+            }
+
+            .modal-table .empty-row:hover {
+                background-color: #f5f5f5;
+            }
+
+            .modal-table .cell-absent-highlight {
+                background-color: #ef798a;
+            }
+
+            .modal-table .cell-late-highlight {
+                background-color: #f2f79e;
+            }
+
+            .modal-table .input-wrapper {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .modal-table .input-wrapper .material-symbols-outlined {
+                font-size: 18px;
+                color: #f57c00;
+            }
+
+            .modal-footer {
+                padding: 20px 30px;
+                border-top: 1px solid #e0e0e0;
+                display: flex;
+                justify-content: flex-end;
+                gap: 12px;
+            }
+
+            /* Bulk edit modal form styles */
+            .form-group {
+                margin-bottom: 20px;
+            }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 8px;
+                font-weight: 500;
+                color: #333333;
+                font-size: 14px;
+            }
+
+            .form-group select,
+            .form-group input[type="number"] {
+                width: 100%;
+                padding: 10px 14px;
+                border: 1px solid #dddddd;
+                border-radius: 8px;
+                font-size: 14px;
+                font-family: inherit;
+                background-color: #ffffff;
+                transition: border-color 0.2s ease;
+                box-sizing: border-box;
+            }
+
+            .form-group select:focus,
+            .form-group input[type="number"]:focus {
+                outline: none;
+                border-color: var(--color-primary);
+            }
+
+            .form-group .help-text {
+                font-size: 12px;
+                color: #666666;
+                margin-top: 6px;
+            }
+
+            @media (max-width: 768px) {
+                .modal-content {
+                    width: 95%;
+                    max-height: 90vh;
+                }
+
+                .modal-header,
+                .modal-body,
+                .modal-footer {
+                    padding: 16px 20px;
+                }
+
+                .modal-table {
+                    font-size: 12px;
+                }
+
+                .modal-table th,
+                .modal-table td {
+                    padding: 8px;
+                }
+            }
+
+            /* Date picker section */
+            .date-picker-box {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+                flex: 0 0 auto;
+                margin-left: auto;
+            }
+
+            .date-picker-box .material-symbols-outlined {
+                font-size: 20px;
+            }
+
+            .date-picker-box input[type="month"],
+            .date-picker-box select {
+                padding: 10px 14px;
+                border: 1px solid #dddddd;
+                border-radius: 8px;
+                font-size: 14px;
+                font-family: inherit;
+                background-color: #ffffff;
+                cursor: pointer;
+                transition: border-color 0.2s ease;
+                min-width: 80px;
+            }
+
+            .date-picker-box input[type="month"]:focus,
+            .date-picker-box select:focus {
+                outline: none;
+                border-color: var(--color-primary);
+            }
+
+            .date-picker-box select:hover {
+                border-color: #999999;
+            }
+
+            .date-picker-box select {
+                appearance: none;
+                padding-right: 36px;
+            }
+
+            /* Search and filter section */
+            .controls {
+                display: flex;
+                gap: 12px;
+                margin-bottom: 20px;
+                flex-wrap: wrap;
+                align-items: center;
+            }
+
+            .search-box {
+                flex: 1 1 200px;
+                position: relative;
+            }
+
+            .search-box .material-symbols-outlined {
+                position: absolute;
+                left: 14px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #999999;
+                font-size: 20px;
+                pointer-events: none;
+            }
+
+            .search-box input {
+                width: 80%;
+                padding: 10px 14px 10px 44px;
+                border: 1px solid #dddddd;
+                border-radius: 8px;
+                font-size: 14px;
+                font-family: inherit;
+                transition: border-color 0.2s ease;
+            }
+
+            .search-box input:focus {
+                outline: none;
+                border-color: var(--color-primary);
+            }
+
+            .filter-box {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+                flex: 0 0 auto;
+                min-width: 200px;
+            }
+
+            .filter-box .material-symbols-outlined {
+                color: #666666;
+                font-size: 20px;
+            }
+
+            .filter-box label {
+                font-size: 14px;
+                color: #666666;
+                font-weight: 500;
+                display: none;
+            }
+
+            .filter-box select {
+                padding: 10px 14px;
+                border: 1px solid #dddddd;
+                border-radius: 8px;
+                font-size: 14px;
+                font-family: inherit;
+                background-color: #ffffff;
+                cursor: pointer;
+                transition: border-color 0.2s ease;
+            }
+
+            .filter-box select:focus {
+                outline: none;
+                border-color: var(--color-primary);
+            }
+
+            /* Main payroll table */
+            .payroll-table {
+                border-collapse: collapse;
+                width: 100%;
+                margin-top: 20px;
+                display: table;
+                overflow-x: auto;
+                table-layout: fixed;
+            }
+
+            .payroll-table thead,
+            .payroll-table tbody {
+                display: table-row-group;
+            }
+
+            .payroll-table tr {
+                display: table-row;
+            }
+
+            /* Column width specifications for payroll table */
+            .payroll-table th:nth-child(1),
+            .payroll-table td:nth-child(1) {
+                width: 35%;
+                min-width: 250px;
+            }
+
+            .payroll-table th:nth-child(2),
+            .payroll-table td:nth-child(2) {
+                width: 150px;
+                min-width: 150px;
+            }
+
+            .payroll-table th:nth-child(3),
+            .payroll-table td:nth-child(3) {
+                width: 120px;
+                min-width: 120px;
+            }
+
+            .payroll-table th:nth-child(4),
+            .payroll-table td:nth-child(4) {
+                width: 180px;
+                min-width: 180px;
+            }
+
+            th,
+            td {
+                border: 1px solid #dddddd;
+                padding: 12px 10px;
+                text-align: left;
+                font-size: 14px;
+            }
+
+            th {
+                background-color: #f8f8f8;
+                color: #333333;
+                font-weight: 600;
+                cursor: pointer;
+                user-select: none;
+                position: relative;
+                padding-right: 30px;
+            }
+
+            th:hover {
+                background-color: #f0f0f0;
+            }
+
+            /* Sort indicator */
+            th.sortable::after {
+                content: "unfold_more";
+                font-family: "Material Symbols Outlined";
+                position: absolute;
+                right: 10px;
+                opacity: 0.3;
+                font-size: 18px;
+            }
+
+            th.sorted-asc::after {
+                content: "arrow_upward";
+                font-family: "Material Symbols Outlined";
+                opacity: 1;
+                color: var(--color-primary);
+            }
+
+            th.sorted-desc::after {
+                content: "arrow_downward";
+                font-family: "Material Symbols Outlined";
+                opacity: 1;
+                color: var(--color-primary);
+            }
+
+            tr:nth-child(even) {
+                background-color: #fafafa;
+            }
+
+            tbody tr:hover {
+                background-color: #f5f5f5;
+            }
+
+            /* Employee name styling */
+            .employee-name {
+                font-weight: 500;
+                color: #333333;
+                margin-bottom: 4px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+
+            .employee-name a {
+                color: var(--color-primary);
+                text-decoration: none;
+                transition: color 0.2s ease;
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                cursor: pointer;
+            }
+
+            .employee-name a .material-symbols-outlined {
+                font-size: 16px;
+                opacity: 0.7;
+            }
+
+            .employee-name a:hover {
+                filter: brightness(1.1);
+            }
+
+            .employee-id-badge {
+                display: inline-block;
+                padding: 2px 8px;
+                background-color: #f0f0f0;
+                border: 1px solid #dddddd;
+                border-radius: 12px;
+                font-size: 11px;
+                font-weight: 600;
+                color: #666666;
+                line-height: 1.4;
+            }
+
+            /* Subtext container for role and department */
+            .employee-subtext {
+                font-size: 12px;
+                color: #666666;
+                line-height: 1.4;
+            }
+
+            .employee-subtext .role,
+            .employee-subtext .department {
+                display: inline-block;
+            }
+
+            .employee-subtext .separator {
+                margin: 0 6px;
+                color: #999999;
+            }
+
+            /* Empty state styling */
+            .empty-state {
+                text-align: center;
+                padding: 40px 20px;
+                color: #999999;
+                font-style: italic;
+            }
+
+            /* Numeric columns styling */
+            .numeric-cell {
+                text-align: center;
+                font-variant-numeric: tabular-nums;
+            }
+
+            /* Results count */
+            .results-count {
+                font-size: 14px;
+                color: #666666;
+                margin-top: 10px;
+                margin-bottom: -10px;
+            }
+
+            /* Pagination */
+            .pagination-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 24px;
+                flex-wrap: wrap;
+                gap: 16px;
+            }
+
+            .pagination-info {
+                font-size: 14px;
+                color: #666666;
+            }
+
+            .pagination-controls {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+            }
+
+            #paginationNumbers {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+            }
+
+            .pagination-btn {
+                padding: 8px;
+                min-width: 40px;
+                height: 40px;
+                border: 1px solid #dddddd;
+                background-color: #ffffff;
+                color: #333333;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 14px;
+                font-weight: 500;
+                transition: all 0.2s ease;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .pagination-btn:hover:not(:disabled) {
+                background-color: #f5f5f5;
+                border-color: var(--color-primary);
+            }
+
+            .pagination-btn:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+            }
+
+            .pagination-btn.active {
+                background-color: var(--color-primary);
+                color: #ffffff;
+                border-color: var(--color-primary);
+            }
+
+            .pagination-btn .material-symbols-outlined {
+                font-size: 20px;
+            }
+
+            .page-size-selector {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .page-size-selector label {
+                font-size: 14px;
+                color: #666666;
+            }
+
+            .page-size-selector select {
+                padding: 8px 12px;
+                border: 1px solid #dddddd;
+                border-radius: 8px;
+                font-size: 14px;
+                font-family: inherit;
+                background-color: #ffffff;
+                cursor: pointer;
+            }
+
+            /* Cutoff progress stepper */
+            .stepper-toggle {
+                background: none;
+                border: 1px solid #dddddd;
+                border-radius: 50%;
+                width: 32px;
+                height: 32px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                position: relative;
+                vertical-align: middle;
+            }
+
+            .stepper-toggle:hover {
+                background-color: #f0f0f0;
+                border-color: var(--color-primary);
+            }
+
+            .stepper-toggle .material-symbols-outlined {
+                font-size: 20px;
+                color: #666666;
+            }
+
+            .stepper-toggle:hover .material-symbols-outlined {
+                color: var(--color-primary);
+            }
+
+            .stepper-popover {
+                display: none;
+                position: absolute;
+                top: calc(100% + 8px);
+                left: 50%;
+                transform: translateX(-20%);
+                background-color: #ffffff;
+                border-radius: 12px;
+                box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+                padding: 20px 24px;
+                z-index: 500;
+                min-width: 260px;
+                animation: fadeIn 0.2s ease;
+            }
+
+            .stepper-popover.show {
+                display: block;
+            }
+
+            .stepper-popover-title {
+                font-size: 13px;
+                font-weight: 600;
+                color: #333333;
+                margin-bottom: 16px;
+            }
+
+            .stepper-list {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+
+            .stepper-item {
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+                position: relative;
+                padding-bottom: 20px;
+            }
+
+            .stepper-item:last-child {
+                padding-bottom: 0;
+            }
+
+            .stepper-item:not(:last-child)::after {
+                content: '';
+                position: absolute;
+                left: 13px;
+                top: 24px;
+                width: 2px;
+                bottom: 0;
+                background-color: #e0e0e0;
+            }
+
+            .stepper-item.completed:not(:last-child)::after {
+                background-color: #4caf50;
+            }
+
+            .stepper-icon {
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                border: 2px solid #e0e0e0;
+                background-color: #ffffff;
+                position: relative;
+                z-index: 1;
+            }
+
+            .stepper-item.completed .stepper-icon {
+                background-color: #4caf50;
+                border-color: #4caf50;
+            }
+
+            .stepper-item.completed .stepper-icon .material-symbols-outlined {
+                font-size: 16px;
+                color: #ffffff;
+            }
+
+            .stepper-item.pending .stepper-icon {
+                border-color: #e0e0e0;
+                background-color: #ffffff;
+            }
+
+            .stepper-item.pending .stepper-icon .material-symbols-outlined {
+                font-size: 16px;
+                color: #bdbdbd;
+            }
+
+            .stepper-label {
+                font-size: 13px;
+                color: #666666;
+                line-height: 24px;
+            }
+
+            .stepper-item.completed .stepper-label {
+                color: #333333;
+                font-weight: 500;
+            }
+
+            .stepper-backdrop {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 499;
+            }
+
+            .stepper-backdrop.show {
+                display: block;
+            }
+
+            /* Cache timestamp */
+            .cache-timestamp {
+                font-size: 12px;
+                color: #999999;
+                margin-top: -8px;
+                margin-bottom: 8px;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                cursor: help;
+            }
+
+            .cache-timestamp .material-symbols-outlined {
+                font-size: 14px;
+                color: #999999;
+            }
+
+            /* Loading notification */
+            .loading-notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background-color: #ffffff;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                padding: 12px 16px;
+                display: none;
+                align-items: center;
+                gap: 10px;
+                z-index: 2000;
+                font-size: 14px;
+                color: #333333;
+            }
+
+            .loading-notification.active {
+                display: flex;
+            }
+
+            .loading-spinner {
+                width: 16px;
+                height: 16px;
+                border: 2px solid #e0e0e0;
+                border-top-color: var(--color-primary);
+                border-radius: 50%;
+                animation: spin 0.8s linear infinite;
+            }
+
+            @keyframes spin {
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+
+            /* Responsive design */
+            @media (max-width: 1024px) {
+                .container {
+                    padding: 25px;
+                    max-width: 100%;
+                }
+
+                .actions,
+                .controls {
+                    flex-direction: column;
+                    align-items: stretch;
+                }
+
+                .btn {
+                    width: 100%;
+                }
+
+                .search-box,
+                .filter-box {
+                    flex: 1 1 auto;
+                    width: 100%;
+                }
+
+                .payroll-table {
+                    font-size: 12px;
+                    display: block;
+                    overflow-x: auto;
+                    -webkit-overflow-scrolling: touch;
+                }
+
+                .payroll-table thead,
+                .payroll-table tbody {
+                    display: table-row-group;
+                }
+
+                .payroll-table tr {
+                    display: table-row;
+                }
+
+                th,
+                td {
+                    padding: 8px 6px;
+                    white-space: nowrap;
+                }
+
+                th {
+                    padding-right: 24px;
+                }
+
+                .employee-name {
+                    font-size: 13px;
+                }
+
+                .employee-subtext {
+                    font-size: 11px;
+                    white-space: normal;
+                }
+
+                .pagination-container {
+                    flex-direction: column;
+                    align-items: stretch;
+                }
+
+                .pagination-controls {
+                    justify-content: center;
+                }
+
+                .page-size-selector {
+                    justify-content: center;
+                }
+            }
+
+            /* Tab styles */
+            .tab-container {
+                margin-top: 20px;
+            }
+
+            .tab-buttons {
+                display: flex;
+                gap: 2px;
+                border-bottom: 2px solid #e0e0e0;
+                overflow-x: auto;
+                flex-wrap: wrap;
+                margin-bottom: 20px;
+            }
+
+            .tab-btn {
+                padding: 12px 20px;
+                border: none;
+                background-color: #f5f5f5;
+                color: #666666;
+                font-size: 14px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                border-top-left-radius: 8px;
+                border-top-right-radius: 8px;
+                white-space: nowrap;
+                font-family: inherit;
+            }
+
+            .tab-btn:hover {
+                background-color: #e8e8e8;
+            }
+
+            .tab-btn.active {
+                background-color: var(--color-primary);
+                color: #ffffff;
+            }
+
+            .tab-content {
+                display: none;
+            }
+
+            .tab-content.active {
+                display: block;
+            }
+
+            .placeholder-text {
+                text-align: center;
+                color: #999999;
+                padding: 40px 20px;
+                font-size: 14px;
+            }
+
+            /* Payroll tab table */
+            #tab-payroll .table-wrapper {
+                overflow-x: auto;
+                margin-top: 20px;
+                border: 1px solid #e0e0e0;
+            }
+
+            #tab-payroll table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 13px;
+            }
+
+            #tab-payroll thead {
+                background-color: #f8f9fa;
+                position: sticky;
+                top: 0;
+                z-index: 10;
+            }
+
+            #tab-payroll th {
+                padding: 12px 8px;
+                text-align: left;
+                font-weight: 600;
+                color: #333333;
+                border: none;
+                border-bottom: 2px solid #dee2e6;
+                white-space: nowrap;
+                cursor: default;
+                user-select: auto;
+                padding-right: 8px;
+                background-color: #f8f9fa;
+            }
+
+            #tab-payroll th:hover {
+                background-color: #f8f9fa;
+            }
+
+            #tab-payroll td {
+                padding: 10px 8px;
+                border: none;
+                border-bottom: 1px solid #e9ecef;
+                color: #495057;
+            }
+
+            #tab-payroll .employee-name-cell {
+                font-weight: bold;
+            }
+
+            #tab-payroll tbody tr:hover {
+                background-color: #f8f9fa;
+            }
+
+            #tab-payroll tbody tr:last-child td {
+                border-bottom: none;
+            }
+
+            /* Payroll tab search (consistent with Show Payroll View) */
+            #tab-payroll .search-container {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+                flex: 1;
+                min-width: 200px;
+            }
+
+            #tab-payroll .search-input {
+                flex: 1;
+                padding: 10px 16px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                font-size: 14px;
+                font-family: inherit;
+                transition: all 0.2s ease;
+            }
+
+            #tab-payroll .search-input:focus {
+                outline: none;
+                border-color: var(--color-primary);
+                box-shadow: 0 0 0 3px rgba(41, 170, 225, 0.1);
+            }
+
+            #tab-payroll .search-input::placeholder {
+                color: #999999;
+            }
+
+            .wip-badge {
+                display: inline-block;
+                padding: 2px 8px;
+                background-color: #fff3cd;
+                color: #856404;
+                border-radius: 4px;
+                font-size: 11px;
+                font-weight: 600;
+                margin-left: 6px;
+                vertical-align: middle;
+            }
+
+            #tab-payslips {
+                min-height: 600px;
+            }
+
+            /* Journal Entry Tab Styles */
+            #tab-journal-entry {
+                min-height: 600px;
+            }
+
+            .journal-entry-table-wrapper {
+                margin-top: 20px;
+                border: 1px solid #e0e0e0;
+                border-radius: 8px;
+                overflow-x: auto;
+            }
+
+            .journal-entry-table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 13px;
+            }
+
+            .journal-entry-table thead {
+                background-color: #f8f9fa;
+                position: sticky;
+                top: 0;
+                z-index: 10;
+            }
+
+            .journal-entry-table th {
+                padding: 12px 8px;
+                text-align: left;
+                font-weight: 600;
+                color: #333333;
+                border-bottom: 2px solid #dee2e6;
+                white-space: nowrap;
+            }
+
+            .journal-entry-table th.numeric-column {
+                text-align: right;
+            }
+
+            .journal-entry-table td {
+                padding: 10px 8px;
+                border-bottom: 1px solid #e9ecef;
+                color: #495057;
+            }
+
+            .journal-entry-table td.numeric-column {
+                text-align: right;
+            }
+
+            .journal-entry-table tbody tr:nth-child(even) {
+                background-color: #f8f9fa;
+            }
+
+            .journal-entry-table tbody tr:hover {
+                background-color: #e8f1f6;
+            }
+
+            .journal-entry-table tbody tr:last-child td {
+                border-bottom: none;
+            }
+
+            /* Total and Variance rows styling */
+            .journal-entry-table .total-row td {
+                font-weight: 600;
+                background-color: #fff3cd;
+                border-top: 2px solid #ffc107;
+                border-bottom: 2px solid #ffc107;
+            }
+
+            .journal-entry-table .variance-row td {
+                font-weight: 600;
+                background-color: #cfe2ff;
+                border-bottom: 2px solid #0d6efd;
+            }
+
+            .journal-entry-table .empty-row td {
+                background-color: transparent;
+                border-bottom: none;
+                padding: 6px 0;
+            }
+
+            #payslipsPanes {
+                display: flex;
+                gap: 16px;
+                align-items: stretch;
+                min-height: 600px;
+            }
+
+            #payslipsListPane {
+                flex: 0 0 240px;
+                border: 1px solid #e0e0e0;
+                border-radius: 8px;
+                overflow-y: auto;
+                background-color: #f8f9fa;
+            }
+
+            #payslipsListPane::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            #payslipsListPane::-webkit-scrollbar-track {
+                background: #f1f1f1;
+                border-radius: 4px;
+            }
+
+            #payslipsListPane::-webkit-scrollbar-thumb {
+                background: #bdbdbd;
+                border-radius: 4px;
+            }
+
+            #payslipsListPane::-webkit-scrollbar-thumb:hover {
+                background: #999999;
+            }
+
+            .payslip-list-item {
+                padding: 10px 16px;
+                border-bottom: 1px solid #e0e0e0;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                background-color: #ffffff;
+                border-left: 3px solid transparent;
+                font-size: 13px;
+            }
+
+            .payslip-list-item:hover {
+                background-color: #f5f5f5;
+                border-left-color: var(--color-primary);
+            }
+
+            .payslip-list-item.active {
+                background-color: var(--color-primary);
+                color: #ffffff;
+                border-left-color: var(--color-primary);
+                font-weight: 600;
+            }
+
+            .payslip-list-item .status-icon {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                margin-right: 8px;
+                vertical-align: middle;
+                font-size: 18px;
+                color: #4caf50;
+            }
+
+            .payslip-list-item .status-icon.pending {
+                color: #cccccc;
+            }
+
+            #payslipsDetailPane {
+                flex: 1;
+                border: 1px solid #e0e0e0;
+                border-radius: 8px;
+                padding: 24px 30px;
+                background-color: #ffffff;
+                overflow-y: auto;
+            }
+
+            #payslipsDetailPane::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            #payslipsDetailPane::-webkit-scrollbar-track {
+                background: #f1f1f1;
+                border-radius: 4px;
+            }
+
+            #payslipsDetailPane::-webkit-scrollbar-thumb {
+                background: #bdbdbd;
+                border-radius: 4px;
+            }
+
+            #payslipsDetailPane::-webkit-scrollbar-thumb:hover {
+                background: #999999;
+            }
+
+            .payslip-detail-placeholder {
+                text-align: center;
+                color: #999999;
+                padding: 40px 20px;
+                font-size: 14px;
+            }
+
+            .payslip-detail-header {
+                padding: 12px 16px;
+                background-color: #f8f9fa;
+                border-bottom: 1px solid #e0e0e0;
+                border-radius: 8px 8px 0 0;
+                margin: -24px -30px 0 -30px;
+            }
+
+            .payslip-detail-header h3 {
+                margin: 0;
+                color: #333333;
+                font-size: 18px;
+                font-weight: 600;
+            }
+
+            .payslip-detail-header .payslip-subtitle {
+                margin: 2px 0 0 0;
+                color: #666666;
+                font-size: 12px;
+                font-weight: 400;
+            }
+
+            .payslip-receipt-status {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                margin-top: 8px;
+                font-size: 12px;
+                color: #666666;
+            }
+
+            .payslip-receipt-icon {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 16px;
+                color: #4caf50;
+            }
+
+            .payslip-receipt-icon.pending {
+                color: #cccccc;
+            }
+
+            .payslip-meta-row {
+                display: flex;
+                padding: 8px 16px;
+                margin: 0 -30px 0 -30px;
+                border-bottom: 1px solid #e0e0e0;
+                background-color: #fff;
+                gap: 24px;
+                flex-wrap: wrap;
+            }
+
+            .payslip-meta-row .payslip-meta-item {
+                display: flex;
+                gap: 6px;
+                font-size: 13px;
+            }
+
+            .payslip-meta-row .payslip-meta-label {
+                font-weight: 600;
+                color: #333;
+            }
+
+            .payslip-meta-row .payslip-meta-value {
+                color: #555;
+            }
+
+            .payslip-two-col {
+                display: flex;
+                gap: 0;
+                margin: 0 -30px;
+                padding: 0;
+            }
+
+            .payslip-col {
+                flex: 1;
+                padding: 12px 16px;
+            }
+
+            .payslip-col-left {
+                border-right: 1px solid #e0e0e0;
+            }
+
+            .payslip-section-title {
+                font-size: 13px;
+                font-weight: 700;
+                color: var(--color-primary);
+                margin: 12px 0 4px 0;
+                padding: 0;
+            }
+
+            .payslip-section-title:first-child {
+                margin-top: 0;
+            }
+
+            .payslip-row {
+                display: flex;
+                justify-content: space-between;
+                padding: 3px 0;
+                font-size: 13px;
+            }
+
+            .payslip-row-label {
+                color: #444444;
+            }
+
+            .payslip-row-value {
+                color: #333333;
+                text-align: right;
+                min-width: 60px;
+            }
+
+            .payslip-row.total {
+                font-weight: 700;
+                border-top: 1px solid #cccccc;
+                margin-top: 4px;
+                padding-top: 6px;
+            }
+
+            .payslip-row.grand-total {
+                font-weight: 700;
+                font-size: 14px;
+                border-top: 2px solid #333333;
+                margin-top: 6px;
+                padding-top: 8px;
+            }
+
+            .payslip-spacer {
+                height: 10px;
+            }
+
+            @media (max-width: 768px) {
+                #payslipsPanes {
+                    flex-direction: column;
+                    min-height: auto;
+                }
+
+                #payslipsListPane {
+                    flex: 0 0 auto;
+                    max-height: 200px;
+                }
+
+                .payslip-two-col {
+                    flex-direction: column;
+                }
+
+                .payslip-col-left {
+                    border-right: none;
+                    border-bottom: 1px solid #e0e0e0;
+                }
+            }
+        </style>
+        <script>
+                const /** @type {import('../types/payrollTypes').PayrollSheetInfo[]} */ employeeData = [{"id":18,"employee":"Suarez, Kimberlyn Vianca","department":"ACCOUNTING","role":"Account Supervisor - TNM","totalWorkingTime":"81:59:00","totalAbsents":0,"totalLatesAndUndertimes":15},{"id":20,"employee":"Panganiban, Danila Mae","department":"ACCOUNTING","role":"Account Supervisor - PH","totalWorkingTime":"81:24:00","totalAbsents":0,"totalLatesAndUndertimes":14},{"id":17,"employee":"Beles, Rhea Belle","department":"OPERATIONS","role":"Operations Manager","totalWorkingTime":"78:52:00","totalAbsents":0.5,"totalLatesAndUndertimes":64},{"id":33,"employee":"Morales, Laiza","department":"ACCOUNTING","role":"Accounting Intern","totalWorkingTime":"82:20:00","totalAbsents":0,"totalLatesAndUndertimes":0},{"id":34,"employee":"Rodil, Marco Elijah","department":"IT","role":"IT Intern","totalWorkingTime":"80:53:00","totalAbsents":0,"totalLatesAndUndertimes":0},{"id":29,"employee":"Tayao, Christopher Andrei","department":"IT","role":"IT Intern","totalWorkingTime":"00:00:00","totalAbsents":0,"totalLatesAndUndertimes":0},{"id":28,"employee":"Escaño, Ruel","department":"IT","role":"IT Intern","totalWorkingTime":"00:00:00","totalAbsents":0,"totalLatesAndUndertimes":0},{"id":30,"employee":"Tenefrancia, Ayra Lexi","department":"IT","role":"IT Intern","totalWorkingTime":"82:32:00","totalAbsents":0,"totalLatesAndUndertimes":0},{"id":19,"employee":"Hilario, Yvon Marjori","department":"HR","role":"HR & Admin Supervisor","totalWorkingTime":"82:42:00","totalAbsents":0,"totalLatesAndUndertimes":0},{"id":26,"employee":"Vinarao, Anthony","department":"ACCOUNTING","role":"Junior Accounting Assistant","totalWorkingTime":"82:06:00","totalAbsents":0,"totalLatesAndUndertimes":0},{"id":25,"employee":"Cayetano, Cheennee","department":"ACCOUNTING","role":"Junior Accounting Assistant","totalWorkingTime":"82:48:00","totalAbsents":0,"totalLatesAndUndertimes":22},{"id":24,"employee":"Torregoza, Don Howard","department":"ACCOUNTING","role":"Junior Accounting Assistant","totalWorkingTime":"81:50:00","totalAbsents":0,"totalLatesAndUndertimes":23},{"id":21,"employee":"Tacaca, Adrian Raye","department":"HR","role":"HR & Admin Assistant","totalWorkingTime":"81:32:00","totalAbsents":0,"totalLatesAndUndertimes":51},{"id":27,"employee":"Alcantara, Ma. Cristina","department":"OPERATIONS","role":"President","totalWorkingTime":"00:00:00","totalAbsents":0,"totalLatesAndUndertimes":0},{"id":23,"employee":"Pedroche, Maria Beatrice","department":"IT","role":"IT Assistant","totalWorkingTime":"84:28:00","totalAbsents":0,"totalLatesAndUndertimes":0},{"id":974951,"employee":"Alberto, Christian Joshua","department":"IT","role":"IT Intern","totalWorkingTime":"40:34:00","totalAbsents":0,"totalLatesAndUndertimes":0}];
+                
+                // --- TEST ENVIRONMENT WEBHOOKS ---
+                const webhookURLs = {
+                    "forceRefreshCache": "https://primary-production-a810.up.railway.app/webhook/test-force-refresh",
+                    "getEmployeeData": "https://primary-production-a810.up.railway.app/webhook/test-get-timesheet",
+                    "approveTimesheetDataForCutoff": "https://primary-production-a810.up.railway.app/webhook/test-confirm-timesheet",
+                    "updateEmployeeTimesheetData": "https://primary-production-a810.up.railway.app/webhook/test-update-timesheet",
+                    
+                    // Below URLs remain unchanged for now until you build their test equivalents
+                    // THESE ARE NEUTERED SO THEY DON'T ACCIDENTALLY HIT PRODUCTION
+    "payrollRegisterView": "https://primary-production-a810.up.railway.app/webhook/DO-NOT-USE-IN-TEST",
+    "getPayrollRegister": "https://primary-production-a810.up.railway.app/webhook/DO-NOT-USE-IN-TEST",
+    "generatePayrollRegister": "https://primary-production-a810.up.railway.app/webhook/DO-NOT-USE-IN-TEST",
+    "confirmPayrollRegister": "https://primary-production-a810.up.railway.app/webhook/DO-NOT-USE-IN-TEST",
+    "sendPayslips": "https://primary-production-a810.up.railway.app/webhook/DO-NOT-USE-IN-TEST",
+    "getAllPayslips": "https://primary-production-a810.up.railway.app/webhook/DO-NOT-USE-IN-TEST",
+    "getJournalEntry": "https://primary-production-a810.up.railway.app/webhook/DO-NOT-USE-IN-TEST",
+    "submitJournalEntry": "https://primary-production-a810.up.railway.app/webhook/DO-NOT-USE-IN-TEST"
+                };
+
+                const /** @type {boolean} */ iseuser = true
+                const /** @type {string} */ company = "CISI";
+                const /** @type {number} */ selectedYear = 2026;
+                const /** @type {string} */ selectedMonth = "March";
+                let /** @type {boolean} */ selectedCutoffApproved = false;
+                let /** @type {boolean} */ selectedCutoffPRExecuted = false;
+                let /** @type {boolean} */ selectedCutoffDisbursed = false;
+                let /** @type {boolean} */ selectedCutoffPayslipsSent = false;
+                let /** @type {string} */ selectedCutoff = "Q1";
+                const /** @type {string|null} */ cacheLastUpdated = "2026-03-23T03:34:21.396Z";
+
+                let filteredData = [];
+                let currentSort = {column: null, direction: "asc"};
+                let currentPage = 1;
+                let pageSize = 10;
+                let currentEmployeeTimesheetData = null;
+                let originalEmployeeTimesheetData = null;
+                let hasUnsavedChanges = false;
+                let modifiedRows = new Set();
+
+                /**
+                 * Escape HTML and prevent XSS
+                 * @param {string|number} text The text to escape.
+                 * @returns {string} The escaped version of the text.
+                 */
+                function escapeHtml(text) {
+                    const div = document.createElement("div");
+                    div.textContent = String(text);
+                    return div.innerHTML;
+                }
+
+                /**
+                 * Convert HH:MM:SS time string to seconds for sorting
+                 * @param {string} timeStr Time string in HH:MM:SS format
+                 * @returns {number} Total seconds
+                 */
+                function timeToSeconds(timeStr) {
+                    if (!timeStr) return 0;
+                    const parts = String(timeStr).split(":").map(Number);
+                    const hours = parts[0] || 0;
+                    const minutes = parts[1] || 0;
+                    const seconds = parts[2] || 0;
+                    return hours * 3600 + minutes * 60 + seconds;
+                }
+
+                /**
+                 * Convert time string (H:MM or HH:MM or HH:MM:SS) to seconds
+                 * @param {string} timeStr Time string
+                 * @returns {number} Total seconds
+                 */
+                function timeStringToSeconds(timeStr) {
+                    if (!timeStr) return 0;
+                    var parts = String(timeStr).split(':');
+                    var hours = parseInt(parts[0], 10) || 0;
+                    var minutes = parseInt(parts[1], 10) || 0;
+                    var seconds = parseInt(parts[2], 10) || 0;
+                    return hours * 3600 + minutes * 60 + seconds;
+                }
+                /**
+                 * Convert seconds to HH:MM:SS format
+                 * @param {number} totalSeconds Total seconds
+                 * @returns {string} Time in HH:MM:SS format
+                 */
+                function secondsToTimeString(totalSeconds) {
+                    if (!totalSeconds || totalSeconds <= 0) return '00:00:00';
+                    var hours = Math.floor(totalSeconds / 3600);
+                    var minutes = Math.floor((totalSeconds % 3600) / 60);
+                    var seconds = Math.floor(totalSeconds % 60);
+                    var hourStr = hours < 10 ? '0' + hours : '' + hours;
+                    var minStr = minutes < 10 ? '0' + minutes : '' + minutes;
+                    var secStr = seconds < 10 ? '0' + seconds : '' + seconds;
+                    return hourStr + ':' + minStr + ':' + secStr;
+                }
+
+                /**
+                 * Compute working time for a specific day
+                 * Formula: (TIME OUT - TIME IN) - (Break Out - Break In)
+                 * @param {string} timeIn Time in
+                 * @param {string} timeOut Time out
+                 * @param {string} breakIn Break in (when starting break)
+                 * @param {string} breakOut Break out (when returning from break)
+                 * @returns {string} Working time in HH:MM:SS format
+                 */
+                function computeWorkingTime(timeIn, timeOut, breakIn, breakOut) {
+                    if (!timeIn || !timeOut) return '00:00:00';
+                    var totalSeconds = timeStringToSeconds(timeOut) - timeStringToSeconds(timeIn);
+                    var breakSeconds = 0;
+                    if (breakIn && breakOut) {
+                        breakSeconds = timeStringToSeconds(breakOut) - timeStringToSeconds(breakIn);
+                    }
+                    var workingSeconds = totalSeconds - breakSeconds;
+                    return secondsToTimeString(workingSeconds);
+                }
+
+                /**
+                 * Render the Journal Entry table
+                 */
+                function renderJournalEntry() {
+                    var tableBody = document.getElementById('journalEntryTableBody');
+                    var placeholder = document.getElementById('journalEntryPlaceholder');
+                    var table = document.getElementById('journalEntryTable');
+
+                    if (!tableBody) return;
+
+                    if (!journalEntryData || journalEntryData.length === 0) {
+                        placeholder.style.display = 'block';
+                        table.style.display = 'none';
+                        return;
+                    }
+
+                    placeholder.style.display = 'none';
+                    table.style.display = 'table';
+                    tableBody.innerHTML = '';
+
+                    // Render journal entry rows
+                    journalEntryData.forEach(function(row) {
+                        var tr = document.createElement('tr');
+
+                        // Determine row type
+                        var account = (row.account || '').trim();
+                        var description = (row.description || '').trim();
+                        var debitValue = parseFloat(row.debit) || 0;
+                        var creditValue = parseFloat(row.credit) || 0;
+
+                        var isEmptyRow = !account && !description && debitValue === 0 && creditValue === 0;
+                        var isTotalRow = account.toUpperCase() === 'TOTAL';
+                        var isVarianceRow = account.toUpperCase() === 'VARIANCE';
+
+                        if (isEmptyRow) {
+                            tr.className = 'empty-row';
+                        } else if (isTotalRow) {
+                            tr.className = 'total-row';
+                        } else if (isVarianceRow) {
+                            tr.className = 'variance-row';
+                        }
+
+                        // Format debit and credit values
+                        var debitDisplay = '';
+                        var creditDisplay = '';
+
+                        if (isTotalRow || isVarianceRow) {
+                            // Show all values for total and variance rows, including negatives
+                            debitDisplay = debitValue !== 0 ? formatCurrency(Math.abs(debitValue)) : '';
+                            creditDisplay = creditValue !== 0 ? formatCurrency(Math.abs(creditValue)) : '';
+                            if (debitValue < 0) debitDisplay = '(' + debitDisplay + ')';
+                            if (creditValue < 0) creditDisplay = '(' + creditDisplay + ')';
+                        } else if (!isEmptyRow) {
+                            // For regular rows, only show non-zero values
+                            debitDisplay = debitValue > 0 ? formatCurrency(debitValue) : '';
+                            creditDisplay = creditValue > 0 ? formatCurrency(creditValue) : '';
+                        }
+
+                        tr.innerHTML = '<td>' + escapeHtml(account) + '</td>' +
+                                       '<td>' + escapeHtml(description) + '</td>' +
+                                       '<td class="numeric-column">' + debitDisplay + '</td>' +
+                                       '<td class="numeric-column">' + creditDisplay + '</td>';
+                        tableBody.appendChild(tr);
+                    });
+                }
+
+                /**
+                 * Fetch and load journal entry data
+                 */
+                async function loadJournalEntry() {
+                    if (journalEntryLoading) return;
+
+                    journalEntryLoading = true;
+                    var placeholder = document.getElementById('journalEntryPlaceholder');
+                    var table = document.getElementById('journalEntryTable');
+
+                    if (placeholder) {
+                        placeholder.textContent = 'Loading journal entry data...';
+                        placeholder.style.display = 'block';
+                    }
+                    if (table) table.style.display = 'none';
+
+                    showLoadingNotification('Loading journal entry...');
+
+                    try {
+                        var response = await fetch(
+                            webhookURLs['getJournalEntry']
+                            + '?company=' + encodeURIComponent(company)
+                            + '&year=' + encodeURIComponent(selectedYear)
+                            + '&month=' + encodeURIComponent(selectedMonth)
+                            + '&cutoff=' + encodeURIComponent(selectedCutoff), {
+                            method: 'GET',
+                            headers: {'Content-Type': 'application/json'}
+                        });
+
+                        var result = await response.json();
+
+                        console.log('Journal Entry Response:', result);
+
+                        if (!response.ok || result.error) {
+                            // Check if this is a not-yet-approved error
+                            if (result.error && (result.error === 'Invalid request' || result.error.toLowerCase().indexOf('not') !== -1 || result.error.toLowerCase().indexOf('approve') !== -1)) {
+                                if (placeholder) {
+                                    placeholder.textContent = 'Journal entry is not available. Please confirm the timesheet and execute the payroll register first.';
+                                    placeholder.style.display = 'block';
+                                }
+                                if (table) table.style.display = 'none';
+                                return;
+                            }
+                            throw new Error(result.error || 'Failed to fetch journal entry data');
+                        }
+
+                        // Store the data - extract the result array from response
+                        journalEntryData = result.result || [];
+
+                        // Render the data
+                        renderJournalEntry();
+
+                    } catch (error) {
+                        console.error('Error fetching journal entry data:', error);
+                        if (placeholder) {
+                            placeholder.textContent = 'Error loading journal entry data. Please try again.';
+                            placeholder.style.display = 'block';
+                        }
+                        if (table) table.style.display = 'none';
+                    } finally {
+                        journalEntryLoading = false;
+                        hideLoadingNotification();
+                    }
+                }
+
+                /**
+                 * Sort data by column
+                 * @param {string} column The column to sort by
+                 */
+                function sortData(column) {
+                    // Toggle direction if same column, otherwise default to ascending
+                    if (currentSort.column === column) {
+                        currentSort.direction = currentSort.direction === "asc" ? "desc" : "asc";
+                    } else {
+                        currentSort.column = column;
+                        currentSort.direction = "asc";
+                    }
+
+                    filteredData.sort(function (a, b) {
+                        let aVal = a[column];
+                        let bVal = b[column];
+
+                        // Special handling for time strings (totalWorkingTime)
+                        if (column === "totalWorkingTime") {
+                            aVal = timeToSeconds(aVal);
+                            bVal = timeToSeconds(bVal);
+                        }
+
+                        // Handle numeric values
+                        if (typeof aVal === "number" && typeof bVal === "number") {
+                            return currentSort.direction === "asc" ? aVal - bVal : bVal - aVal;
+                        }
+
+                        // Handle string values
+                        const aStr = String(aVal || "").toLowerCase();
+                        const bStr = String(bVal || "").toLowerCase();
+
+                        if (aStr < bStr) return currentSort.direction === "asc" ? -1 : 1;
+                        if (aStr > bStr) return currentSort.direction === "asc" ? 1 : -1;
+                        return 0;
+                    });
+
+                    updateSortIndicators(column);
+                    renderTable();
+                }
+
+                /**
+                 * Update sort indicators in table headers
+                 * @param {string} column The currently sorted column
+                 */
+                function updateSortIndicators(column) {
+                    const headers = document.querySelectorAll(".payroll-table th.sortable");
+                    headers.forEach(function (header) {
+                        header.classList.remove("sorted-asc", "sorted-desc");
+                        if (header.dataset.column === column) {
+                            header.classList.add("sorted-" + currentSort.direction);
+                        }
+                    });
+                }
+
+                /**
+                 * Filter data based on search query and department filter
+                 */
+                function filterData() {
+                    const searchQuery = document.getElementById("searchInput").value.toLowerCase();
+                    const departmentFilter = document.getElementById("departmentFilter").value;
+
+                    filteredData = employeeData.filter(function (employee) {
+                        // Search filter
+                        const matchesSearch =
+                            !searchQuery ||
+                            String(employee.id || "").toLowerCase().indexOf(searchQuery) !== -1 ||
+                            String(employee.employee || "").toLowerCase().indexOf(searchQuery) !== -1 ||
+                            String(employee.department || "").toLowerCase().indexOf(searchQuery) !== -1 ||
+                            String(employee.role || "").toLowerCase().indexOf(searchQuery) !== -1;
+
+                        // Department filter
+                        const matchesDepartment =
+                            departmentFilter === "all" ||
+                            String(employee.department || "").toLowerCase() === departmentFilter.toLowerCase();
+
+                        return matchesSearch && matchesDepartment;
+                    });
+
+                    // Reset to first page when filtering
+                    currentPage = 1;
+
+                    // Re-apply current sort if any
+                    if (currentSort.column) {
+                        sortData(currentSort.column);
+                        // sortData calls renderTable, so we don't need to call it again
+                    } else {
+                        renderTable();
+                    }
+                }
+
+                /**
+                 * Render the table with current filtered data
+                 */
+                function renderTable() {
+                    const tbody = document.querySelector(".payroll-table tbody");
+                    tbody.innerHTML = "";
+
+                    if (!filteredData || filteredData.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="4" class="empty-state">No matching employees found</td></tr>';
+                        updateResultsCount(0, 0, 0);
+                        updatePagination();
+                        return;
+                    }
+
+                    // Calculate pagination
+                    const startIndex = (currentPage - 1) * pageSize;
+                    const endIndex = Math.min(startIndex + pageSize, filteredData.length);
+                    const pageData = filteredData.slice(startIndex, endIndex);
+
+                    for (const employee of pageData) {
+                        const row = document.createElement("tr");
+
+                        row.innerHTML = `
+                                <td>
+                                    <div class="employee-name">
+                                        <a href="#" data-employee-id="${escapeHtml(employee.id || "")}" data-employee-name="${escapeHtml(employee.employee || "")}" class="employee-link">
+                                            ${escapeHtml(employee.employee || "")}
+                                            <span class="material-symbols-outlined">info</span>
+                                        </a>
+                                        <span class="employee-id-badge">#${escapeHtml(employee.id || "")}</span>
+                                    </div>
+                                    <div class="employee-subtext">
+                                        <span class="department">${escapeHtml(employee.department || "N/A")}</span>
+                                        <span class="separator">&bull;</span>
+                                        <span class="role">${escapeHtml(employee.role || "N/A")}</span>
+                                    </div>
+                                </td>
+                                <td class="numeric-cell">${escapeHtml(employee.totalWorkingTime || "00:00:00")}</td>
+                                <td class="numeric-cell">${escapeHtml(employee.totalAbsents || 0)}</td>
+                                <td class="numeric-cell">${escapeHtml(employee.totalLatesAndUndertimes || 0)}</td>
+                            `;
+
+                        // Attach click event to employee link
+                        const employeeLink = row.querySelector('.employee-link');
+                        employeeLink.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            const employeeId = this.dataset.employeeId;
+                            const employeeName = this.dataset.employeeName;
+                            console.log('Opening modal for employee ID:', employeeId, 'Name:', employeeName);
+                            if (!employeeId || employeeId === '') {
+                                alert('Error: Employee ID is missing.');
+                                return;
+                            }
+                            openEmployeeModal(employeeId, employeeName);
+                        });
+
+                        tbody.appendChild(row);
+                    }
+
+                    updateResultsCount(filteredData.length, startIndex, endIndex);
+                    updatePagination();
+                }
+
+                /**
+                 * Update the results count display
+                 * @param {number} count Total filtered results
+                 * @param {number} start Start index (0-based)
+                 * @param {number} end End index (exclusive)
+                 */
+                function updateResultsCount(count, start, end) {
+                    const resultsCount = document.getElementById("resultsCount");
+                    const total = employeeData.length;
+
+                    if (count === 0) {
+                        resultsCount.textContent = "No employees found";
+                    } else if (count === total) {
+                        resultsCount.textContent = "Showing " + (start + 1) + "-" + end + " of " + total + " employees";
+                    } else {
+                        resultsCount.textContent = "Showing " + (start + 1) + "-" + end + " of " + count + " employees (filtered from " + total + " total)";
+                    }
+                }
+
+                /**
+                 * Update pagination controls
+                 */
+                function updatePagination() {
+                    const totalPages = Math.ceil(filteredData.length / pageSize);
+                    const paginationInfo = document.getElementById("paginationInfo");
+                    const paginationNumbers = document.getElementById("paginationNumbers");
+                    const prevBtn = document.getElementById("prevPageBtn");
+                    const nextBtn = document.getElementById("nextPageBtn");
+                    const firstBtn = document.getElementById("firstPageBtn");
+                    const lastBtn = document.getElementById("lastPageBtn");
+
+                    // Update info text
+                    paginationInfo.textContent = "Page " + currentPage + " of " + totalPages;
+
+                    // Update button states
+                    prevBtn.disabled = currentPage === 1;
+                    firstBtn.disabled = currentPage === 1;
+                    nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+                    lastBtn.disabled = currentPage === totalPages || totalPages === 0;
+
+                    // Generate page numbers
+                    paginationNumbers.innerHTML = "";
+                    const maxVisiblePages = 5;
+                    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+                    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+                    // Adjust start if we're near the end
+                    if (endPage - startPage < maxVisiblePages - 1) {
+                        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+                    }
+
+                    for (let i = startPage; i <= endPage; i++) {
+                        const pageBtn = document.createElement("button");
+                        pageBtn.className = "pagination-btn" + (i === currentPage ? " active" : "");
+                        pageBtn.textContent = i;
+                        pageBtn.addEventListener("click", function () {
+                            goToPage(i);
+                        });
+                        paginationNumbers.appendChild(pageBtn);
+                    }
+                }
+
+                /**
+                 * Navigate to specific page
+                 * @param {number} page Page number (1-based)
+                 */
+                function goToPage(page) {
+                    const totalPages = Math.ceil(filteredData.length / pageSize);
+                    if (page < 1 || page > totalPages) return;
+
+                    currentPage = page;
+                    renderTable();
+                }
+
+                /**
+                 * Change page size
+                 */
+                function changePageSize() {
+                    const pageSizeSelect = document.getElementById("pageSizeSelect");
+                    pageSize = parseInt(pageSizeSelect.value, 10);
+                    currentPage = 1;
+                    renderTable();
+                }
+
+                /**
+                 * Populate department filter options
+                 */
+                function populateDepartmentFilter() {
+                    const departmentFilter = document.getElementById("departmentFilter");
+                    const departments = {};
+
+                    // Collect unique departments
+                    employeeData.forEach(function (employee) {
+                        const dept = employee.department || "N/A";
+                        departments[dept] = true;
+                    });
+
+                    // Sort departments alphabetically
+                    const sortedDepts = Object.keys(departments).sort();
+
+                    // Add options
+                    sortedDepts.forEach(function (dept) {
+                        const option = document.createElement("option");
+                        option.value = dept;
+                        option.textContent = dept;
+                        departmentFilter.appendChild(option);
+                    });
+                }
+
+                /**
+                 * Convert YYYY-MM format to month name and year
+                 */
+                function parseMonthYear(dateStr) {
+                    const [year, month] = dateStr.split('-').map(Number);
+                    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                        'July', 'August', 'September', 'October', 'November', 'December'];
+                    return {
+                        month: monthNames[month - 1],
+                        year: year
+                    };
+                }
+
+                /**
+                 * Convert month name and year to YYYY-MM format
+                 */
+                function formatMonthYear(monthName, year) {
+                    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                        'July', 'August', 'September', 'October', 'November', 'December'];
+                    const monthIndex = monthNames.indexOf(monthName) + 1;
+                    const monthStr = monthIndex < 10 ? '0' + monthIndex : '' + monthIndex;
+                    return year + '-' + monthStr;
+                }
+
+                /**
+                 * Handle date change and reload page with new parameters
+                 */
+                function changeDate() {
+                    const dateInput = document.getElementById('monthYearPicker');
+                    const cutoffFilter = document.getElementById('cutoffFilter');
+                    const selectedDate = dateInput.value;
+
+                    if (!selectedDate) {
+                        alert('Please select a month and year.');
+                        return;
+                    }
+
+                    const {month, year} = parseMonthYear(selectedDate);
+                    const cutoff = cutoffFilter.value;
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('month', month);
+                    url.searchParams.set('year', year);
+                    url.searchParams.set('cutoff', cutoff);
+                    window.location.href = url.toString();
+                }
+
+                /**
+                 * Format date to readable string
+                 * @param {string|null} dateStr ISO date string
+                 * @returns {string} Formatted date string
+                 */
+                function formatCacheTimestamp(dateStr) {
+                    if (!dateStr) {
+                        return 'Never';
+                    }
+
+                    try {
+                        const date = new Date(dateStr);
+                        const now = new Date();
+                        const diffMs = now - date;
+                        const diffMins = Math.floor(diffMs / 60000);
+                        const diffHours = Math.floor(diffMs / 3600000);
+                        const diffDays = Math.floor(diffMs / 86400000);
+
+                        // Format: "Jan 28, 2026 at 3:45 PM"
+                        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                        const month = months[date.getMonth()];
+                        const day = date.getDate();
+                        const year = date.getFullYear();
+                        let hours = date.getHours();
+                        const minutes = date.getMinutes();
+                        const ampm = hours >= 12 ? 'PM' : 'AM';
+                        hours = hours % 12 || 12;
+                        const minutesStr = minutes < 10 ? '0' + minutes : '' + minutes;
+
+                        let timeAgo = '';
+                        if (diffMins < 1) {
+                            timeAgo = 'just now';
+                        } else if (diffMins < 60) {
+                            timeAgo = diffMins + ' minute' + (diffMins === 1 ? '' : 's') + ' ago';
+                        } else if (diffHours < 24) {
+                            timeAgo = diffHours + ' hour' + (diffHours === 1 ? '' : 's') + ' ago';
+                        } else if (diffDays < 7) {
+                            timeAgo = diffDays + ' day' + (diffDays === 1 ? '' : 's') + ' ago';
+                        }
+
+                        const formatted = month + ' ' + day + ', ' + year + ' at ' + hours + ':' + minutesStr + ' ' + ampm;
+                        // return timeAgo ? formatted + ' (' + timeAgo + ')' : formatted;
+                        return timeAgo ? timeAgo : formatted;
+                    } catch (e) {
+                        return 'Invalid date';
+                    }
+                }
+
+                /**
+                 * Format date to full timestamp string for tooltip
+                 * @param {string|null} dateStr ISO date string
+                 * @returns {string} Full formatted date string
+                 */
+                function formatCacheTimestampFull(dateStr) {
+                    if (!dateStr) {
+                        return 'Cache has never been updated';
+                    }
+
+                    try {
+                        const date = new Date(dateStr);
+                        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                        const month = months[date.getMonth()];
+                        const day = date.getDate();
+                        const year = date.getFullYear();
+                        let hours = date.getHours();
+                        const minutes = date.getMinutes();
+                        const seconds = date.getSeconds();
+                        const ampm = hours >= 12 ? 'PM' : 'AM';
+                        hours = hours % 12 || 12;
+                        const minutesStr = minutes < 10 ? '0' + minutes : '' + minutes;
+                        const secondsStr = seconds < 10 ? '0' + seconds : '' + seconds;
+
+                        return month + ' ' + day + ', ' + year + ' at ' + hours + ':' + minutesStr + ':' + secondsStr + ' ' + ampm;
+                    } catch (e) {
+                        return 'Invalid date';
+                    }
+                }
+
+                /**
+                 * Force refresh list
+                 */
+                async function clickForceRefresh(event) {
+                    const button = event.target.closest('button');
+                    const originalContent = button.innerHTML;
+                    button.textContent = 'Refreshing...';
+                    button.disabled = true;
+
+                    showLoadingNotification('Refreshing cache...');
+
+                    try {
+                        const response = await fetch(webhookURLs["forceRefreshCache"], {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({
+                                "company": company,
+                                "cutoff": selectedCutoff,
+                                "month": selectedMonth,
+                                "year": selectedYear
+                            })
+                        });
+
+                        const result = await response.json();
+
+                        if (response.ok && result.employees) {
+                            window.location.reload(); // refresh the page to show updated data
+
+                        } else if (result.error) {
+                            alert('Failed to refresh cache: ' + result.error);
+                        } else {
+                            alert('An unknown error occurred while refreshing the cache.');
+                        }
+                    } catch (error) {
+                        console.error('Error refreshing cache:', error);
+                        alert('An error occurred while refreshing the cache. Please try again later.');
+                    } finally {
+                        hideLoadingNotification();
+                        button.innerHTML = originalContent;
+                        button.disabled = false;
+                    }
+                }
+
+                /**
+                 * Execute payroll run
+                 */
+                function clickExecutePayroll() {
+                    var form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = webhookURLs['payrollRegisterView'];
+
+                    // Add company parameter
+                    var companyInput = document.createElement('input');
+                    companyInput.type = 'hidden';
+                    companyInput.name = 'company';
+                    companyInput.value = company;
+                    form.appendChild(companyInput);
+
+                    // Add cutoff parameter
+                    var cutoffInput = document.createElement('input');
+                    cutoffInput.type = 'hidden';
+                    cutoffInput.name = 'cutoff';
+                    cutoffInput.value = selectedCutoff;
+                    form.appendChild(cutoffInput);
+
+                    // Add month parameter
+                    var monthInput = document.createElement('input');
+                    monthInput.type = 'hidden';
+                    monthInput.name = 'month';
+                    monthInput.value = selectedMonth;
+                    form.appendChild(monthInput);
+
+                    // Add year parameter
+                    var yearInput = document.createElement('input');
+                    yearInput.type = 'hidden';
+                    yearInput.name = 'year';
+                    yearInput.value = selectedYear;
+                    form.appendChild(yearInput);
+
+                    // Add webhook URLs
+                    var webhookInput = document.createElement('input');
+                    // merge the current URL with webhookURLs
+                    const newWebhookURLs = {
+                        ...webhookURLs,
+                        home: window.location.href
+                    };
+                    webhookInput.type = 'hidden';
+                    webhookInput.name = 'webhookURLs';
+                    webhookInput.value = JSON.stringify(newWebhookURLs);
+                    form.appendChild(webhookInput);
+
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+
+                /**
+                 * Open confirmation modal for timesheet data
+                 */
+                function clickConfirmTimesheet() {
+                    const confirmModal = document.getElementById('confirmTimesheetModal');
+                    confirmModal.classList.add('show');
+                }
+
+                /**
+                 * Close confirmation modal
+                 */
+                function closeConfirmModal() {
+                    const confirmModal = document.getElementById('confirmTimesheetModal');
+                    confirmModal.classList.remove('show');
+                }
+
+                /**
+                 * Handle timesheet confirmation
+                 */
+                async function confirmTimesheetData() {
+                    const confirmButton = document.getElementById('confirmBtn');
+                    const cancelButton = document.getElementById('cancelConfirmBtn');
+                    const originalContent = confirmButton.innerHTML;
+
+                    confirmButton.textContent = 'Confirming...';
+                    confirmButton.disabled = true;
+                    cancelButton.disabled = true;
+
+                    showLoadingNotification('Confirming timesheet data...');
+
+                    try {
+                        const response = await fetch(webhookURLs['approveTimesheetDataForCutoff'], {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({
+                                company: company,
+                                cutoff: selectedCutoff,
+                                month: selectedMonth,
+                                year: selectedYear
+                            })
+                        });
+
+                        const result = await response.json();
+
+                        if (response.ok && result.timesheetApproved === true) {
+                            closeConfirmModal();
+                            window.location.reload();
+                        } else if (result.error) {
+                            alert('Failed to confirm timesheet data: ' + result.error);
+                            confirmButton.innerHTML = originalContent;
+                            confirmButton.disabled = false;
+                            cancelButton.disabled = false;
+                        } else {
+                            alert('An unknown error occurred while confirming the timesheet data.');
+                            confirmButton.innerHTML = originalContent;
+                            confirmButton.disabled = false;
+                            cancelButton.disabled = false;
+                        }
+                    } catch (error) {
+                        console.error('Error confirming timesheet data:', error);
+                        alert('An error occurred while confirming the timesheet data. Please try again later.');
+                        confirmButton.innerHTML = originalContent;
+                        confirmButton.disabled = false;
+                        cancelButton.disabled = false;
+                    } finally {
+                        hideLoadingNotification();
+                    }
+                }
+
+                /**
+                 * Open modal to view employee timesheet details
+                 * @param {string|number} employeeId The employee ID
+                 * @param {string} employeeName The employee name
+                 */
+                async function openEmployeeModal(employeeId, employeeName) {
+                    const modal = document.getElementById('employeeModal');
+                    const modalTitle = document.getElementById('modalEmployeeName');
+                    const modalBody = document.getElementById('modalBody');
+                    const saveButton = document.getElementById('saveTimesheetBtn');
+                    const bulkEditButton = document.getElementById('bulkEditBtn');
+
+                    // Reset state
+                    hasUnsavedChanges = false;
+                    saveButton.disabled = true;
+                    bulkEditButton.disabled = selectedCutoffApproved;
+                    currentEmployeeTimesheetData = null;
+                    originalEmployeeTimesheetData = null;
+                    modifiedRows.clear();
+
+                    // Show modal with loading state
+                    modalTitle.textContent = employeeName;
+                    modalBody.innerHTML = '<div class="modal-loading">Loading timesheet data...</div>';
+                    modal.classList.add('show');
+
+                    showLoadingNotification('Loading employee timesheet...');
+
+                    try {
+                        // Build query parameters
+                        const params = new URLSearchParams({
+                            id: employeeId,
+                            company: company,
+                            cutoff: selectedCutoff,
+                            month: selectedMonth,
+                            year: selectedYear
+                        });
+
+                        const response = await fetch(webhookURLs['getEmployeeData'] + '?' + params.toString(), {
+                            method: 'GET'
+                        });
+
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch timesheet data');
+                        }
+
+                        const timesheetData = await response.json();
+
+                        if (!timesheetData || !timesheetData.result || timesheetData.result.length === 0) {
+                            modalBody.innerHTML = '<div class="modal-error">No timesheet data found for this employee.</div>';
+                            return;
+                        }
+
+                        // Store the data
+                        currentEmployeeTimesheetData = timesheetData.result[0];
+
+                        // Deep clone for comparison later
+                        originalEmployeeTimesheetData = JSON.parse(JSON.stringify(currentEmployeeTimesheetData));
+
+                        // Render the table
+                        renderTimesheetTable(currentEmployeeTimesheetData);
+
+                    } catch (error) {
+                        console.error('Error fetching timesheet data:', error);
+                        modalBody.innerHTML = '<div class="modal-error">Error loading timesheet data. Please try again.</div>';
+                    } finally {
+                        hideLoadingNotification();
+                    }
+                }
+
+                /**
+                 * Render timesheet data in modal table
+                 * @param {Object} timesheet The timesheet data
+                 */
+                function renderTimesheetTable(timesheet) {
+                    const modalBody = document.getElementById('modalBody');
+
+                    if (!timesheet.content || timesheet.content.length === 0) {
+                        modalBody.innerHTML = '<div class="modal-error">No timesheet entries found.</div>';
+                        return;
+                    }
+
+                    const disabledAttr = selectedCutoffApproved ? ' disabled' : '';
+
+                    let tableHTML = `
+                        <div class="modal-table-wrapper">
+                            <table class="modal-table">
+                                <thead>
+                                    <tr>
+                                        <th style="min-width: 75px;">Date</th>
+                                        <th>Time In</th>
+                                        <th>Break In</th>
+                                        <th>Break Out</th>
+                                        <th>Time Out</th>
+                                        <th>Working Time</th>
+                                        <th>Absent</th>
+                                        <th>Late/Undertime</th>
+                                        <th>Night Differential</th>
+                                        <th>Holiday</th>
+                                        <th>Special Holiday</th>
+                                        <th>Regular</th>
+                                        <th>Rest</th>
+                                        <th style="min-width: 200px;">TRF</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    `;
+
+                    timesheet.content.forEach(function (row, index) {
+                        // Check if all time fields are empty
+                        const isEmpty = !row.timeIn && !row.breakOut && !row.breakIn && !row.timeOut;
+                        const rowClass = isEmpty ? ' class="empty-row"' : '';
+
+                        const absentValue = row.absent || 0;
+                        const lateUndertimeValue = row.lateUndertime || 0;
+                        const nightDiffValue = row.nightDifferential || 0;
+                        const holidayOTValue = row.otHoliday || 0;
+                        const specialHolidayOTValue = row.otSpecialHoliday || 0;
+                        const regularOTValue = row.otRegular || 0;
+                        const restValue = row.otRest || 0;
+
+                        const absentCellClass = absentValue > 0 ? ' cell-absent-highlight' : '';
+                        const lateCellClass = lateUndertimeValue > 0 ? ' cell-late-highlight' : '';
+                        const showAbsentWarning = absentValue % .5 !== 0;
+
+                        // TRF Note and Status
+                        const trfNote = row.trf_note || '';
+                        const trfStatus = row.trf_status || '';
+                        let trfStatusIcon = '';
+                        let trfStatusTitle = '';
+
+                        if (trfStatus === 'Excused') {
+                            trfStatusIcon = '<span class="material-symbols-outlined" style="color: #80CB90; font-size: 18px; vertical-align: middle;" title="Excused">check_circle</span>';
+                            trfStatusTitle = 'Excused';
+                        } else if (trfStatus === 'Unexcused') {
+                            trfStatusIcon = '<span class="material-symbols-outlined" style="color: #EF798A; font-size: 18px; vertical-align: middle;" title="Unexcused">warning</span>';
+                            trfStatusTitle = 'Unexcused';
+                        }
+
+                        tableHTML += `
+                            <tr${rowClass}>
+                                <td>${escapeHtml(row.date || '')}</td>
+                                <td class="readonly-cell">${escapeHtml(row.timeIn || '-')}</td>
+                                <td class="readonly-cell">${escapeHtml(row.breakIn || '-')}</td>
+                                <td class="readonly-cell">${escapeHtml(row.breakOut || '-')}</td>
+                                <td class="readonly-cell">${escapeHtml(row.timeOut || '-')}</td>
+                                <td class="readonly-cell">${computeWorkingTime(row.timeIn, row.timeOut, row.breakIn, row.breakOut)}</td>
+                                <td>
+                                    <div class="input-wrapper">
+                                        <input
+                                            type="number"
+                                            class="editable-field${absentCellClass}"
+                                            data-index="${index}"
+                                            data-field="absent"
+                                            value="${absentValue}"
+                                            step="0.5"
+                                            ${selectedCutoffApproved ? "disabled" : ""}
+                                        />
+                                        ${showAbsentWarning ? '<span class="material-symbols-outlined" title="Value should be 0.5 increments">warning</span>' : ''}
+                                    </div>
+                                </td>
+                                <td>
+                                    <input
+                                        type="number"
+                                        class="editable-field${lateCellClass}"
+                                        data-index="${index}"
+                                        data-field="lateUndertime"
+                                        value="${lateUndertimeValue}"
+                                        step="1"
+                                        ${selectedCutoffApproved ? "disabled" : ""}
+                                    />
+                                </td>
+                                <td>
+                                    <input
+                                        type="number"
+                                        class="editable-field"
+                                        data-index="${index}"
+                                        data-field="nightDifferential"
+                                        value="${nightDiffValue}"
+                                        step="1"
+                                        ${selectedCutoffApproved ? "disabled" : ""}
+                                    />
+                                </td>
+                                <td>
+                                    <input
+                                        type="number"
+                                        class="editable-field"
+                                        data-index="${index}"
+                                        data-field="otHoliday"
+                                        value="${holidayOTValue}"
+                                        step="1"
+                                        ${selectedCutoffApproved ? "disabled" : ""}
+                                    />
+                                </td>
+                                <td>
+                                    <input
+                                        type="number"
+                                        class="editable-field"
+                                        data-index="${index}"
+                                        data-field="otSpecialHoliday"
+                                        value="${specialHolidayOTValue}"
+                                        step="1"
+                                        ${selectedCutoffApproved ? "disabled" : ""}
+                                    />
+                                </td>
+                                <td>
+                                    <input
+                                        type="number"
+                                        class="editable-field"
+                                        data-index="${index}"
+                                        data-field="otRegular"
+                                        value="${regularOTValue}"
+                                        step="1"
+                                        ${selectedCutoffApproved ? "disabled" : ""}
+                                    />
+                                </td>
+                                <td>
+                                    <input
+                                        type="number"
+                                        class="editable-field"
+                                        data-index="${index}"
+                                        data-field="otRest"
+                                        value="${restValue}"
+                                        step="1"
+                                        ${selectedCutoffApproved ? "disabled" : ""}
+                                    />
+                                </td>
+                                <td style="white-space: normal;">
+                                    ${trfStatusIcon}
+                                    ${trfNote ? escapeHtml(trfNote) : '-'}
+                                </td>
+                            </tr>
+                        `;
+                    });
+
+                    tableHTML += `
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+
+                    modalBody.innerHTML = tableHTML;
+
+                    // Attach change listeners to editable fields
+                    const editableFields = modalBody.querySelectorAll('.editable-field');
+                    editableFields.forEach(function (field) {
+                        field.addEventListener('input', onTimesheetFieldChange);
+                    });
+
+                    // Update cell highlights on load
+                    updateCellHighlights();
+                }
+
+                /**
+                 * Handle changes to editable fields
+                 */
+                function onTimesheetFieldChange(event) {
+                    const input = event.target;
+                    const index = parseInt(input.dataset.index, 10);
+                    const field = input.dataset.field;
+                    let value = parseFloat(input.value);
+
+                    // Prevent NaN values
+                    if (isNaN(value)) {
+                        value = 0;
+                        input.value = 0;
+                    }
+
+                    // Update the data
+                    if (currentEmployeeTimesheetData && currentEmployeeTimesheetData.content[index]) {
+                        currentEmployeeTimesheetData.content[index][field] = value;
+
+                        // Track this row as modified
+                        modifiedRows.add(index);
+
+                        hasUnsavedChanges = true;
+
+                        // Enable save button
+                        const saveButton = document.getElementById('saveTimesheetBtn');
+                        saveButton.disabled = false;
+
+                        // Update cell highlights and warnings
+                        updateCellHighlights();
+                    }
+                }
+
+                /**
+                 * Open bulk edit modal
+                 */
+                function bulkEditColumn() {
+                    if (selectedCutoffApproved) {
+                        alert('Cannot edit: Timesheet data has been approved for this cutoff.');
+                        return;
+                    }
+
+                    if (!currentEmployeeTimesheetData || !currentEmployeeTimesheetData.content) {
+                        return;
+                    }
+
+                    // Reset form
+                    document.getElementById('bulkEditColumnSelect').value = '';
+                    document.getElementById('bulkEditValue').value = '0';
+
+                    // Show modal
+                    const bulkEditModal = document.getElementById('bulkEditModal');
+                    bulkEditModal.classList.add('show');
+                }
+
+                /**
+                 * Close bulk edit modal
+                 */
+                function closeBulkEditModal() {
+                    const bulkEditModal = document.getElementById('bulkEditModal');
+                    bulkEditModal.classList.remove('show');
+                }
+
+                /**
+                 * Apply bulk edit changes
+                 */
+                function applyBulkEdit() {
+                    const columnSelect = document.getElementById('bulkEditColumnSelect');
+                    const valueInput = document.getElementById('bulkEditValue');
+
+                    const selectedField = columnSelect.value;
+                    const selectedLabel = columnSelect.options[columnSelect.selectedIndex].text;
+
+                    if (!selectedField) {
+                        alert('Please select a column.');
+                        return;
+                    }
+
+                    const numValue = parseFloat(valueInput.value);
+                    if (isNaN(numValue)) {
+                        alert('Please enter a valid number.');
+                        return;
+                    }
+
+                    // Apply to all rows
+                    let changedCount = 0;
+                    currentEmployeeTimesheetData.content.forEach(function (row, index) {
+                        row[selectedField] = numValue;
+                        modifiedRows.add(index);
+                        changedCount++;
+                    });
+
+                    if (changedCount > 0) {
+                        hasUnsavedChanges = true;
+
+                        // Enable save button
+                        const saveButton = document.getElementById('saveTimesheetBtn');
+                        saveButton.disabled = false;
+
+                        // Re-render the table to show updated values
+                        renderTimesheetTable(currentEmployeeTimesheetData);
+
+                        // Close modal
+                        closeBulkEditModal();
+                    }
+                }
+
+                /**
+                 * Update cell highlights and warnings based on current values
+                 */
+                function updateCellHighlights() {
+                    const modalBody = document.getElementById('modalBody');
+                    const rows = modalBody.querySelectorAll('.modal-table tbody tr');
+
+                    rows.forEach(function (row, index) {
+                        if (!currentEmployeeTimesheetData || !currentEmployeeTimesheetData.content[index]) {
+                            return;
+                        }
+
+                        const rowData = currentEmployeeTimesheetData.content[index];
+                        const absentValue = parseFloat(rowData.absent) || 0;
+                        const lateUndertimeValue = parseFloat(rowData.lateUndertime) || 0;
+
+                        // Update absent input highlight
+                        const absentCell = row.cells[6];
+                        const absentInput = absentCell.querySelector('input');
+                        if (absentValue > 0) {
+                            absentInput.classList.add('cell-absent-highlight');
+                        } else {
+                            absentInput.classList.remove('cell-absent-highlight');
+                        }
+
+                        // Update/show warning icon for absent
+                        const absentWrapper = absentCell.querySelector('.input-wrapper');
+                        let warningIcon = absentWrapper.querySelector('.material-symbols-outlined');
+
+                        if (absentValue > 1) {
+                            if (!warningIcon) {
+                                warningIcon = document.createElement('span');
+                                warningIcon.className = 'material-symbols-outlined';
+                                warningIcon.title = 'Value should be 0, 0.5, or 1';
+                                warningIcon.textContent = 'warning';
+                                absentWrapper.appendChild(warningIcon);
+                            }
+                        } else {
+                            if (warningIcon) {
+                                warningIcon.remove();
+                            }
+                        }
+
+                        // Update late/undertime input highlight
+                        const lateCell = row.cells[7];
+                        const lateInput = lateCell.querySelector('input');
+                        if (lateUndertimeValue > 0) {
+                            lateInput.classList.add('cell-late-highlight');
+                        } else {
+                            lateInput.classList.remove('cell-late-highlight');
+                        }
+                    });
+                }
+
+                /**
+                 * Close the employee modal
+                 */
+                function closeEmployeeModal() {
+                    if (hasUnsavedChanges) {
+                        const confirmClose = confirm('You have unsaved changes. Are you sure you want to close?');
+                        if (!confirmClose) {
+                            return;
+                        }
+                    }
+
+                    const modal = document.getElementById('employeeModal');
+                    modal.classList.remove('show');
+                    hasUnsavedChanges = false;
+                    currentEmployeeTimesheetData = null;
+                    originalEmployeeTimesheetData = null;
+                    modifiedRows.clear();
+                }
+
+                /**
+                 * Save timesheet changes
+                 */
+                async function saveTimesheetChanges() {
+                    const saveButton = document.getElementById('saveTimesheetBtn');
+                    const cancelButton = document.getElementById('cancelTimesheetBtn');
+                    const originalContent = saveButton.innerHTML;
+
+                    if (!currentEmployeeTimesheetData) {
+                        alert('No timesheet data to save.');
+                        return;
+                    }
+
+                    // Extract only modified rows
+                    const modifiedTimesheetData = [];
+                    modifiedRows.forEach(function (index) {
+                        if (currentEmployeeTimesheetData.content[index]) {
+                            modifiedTimesheetData.push(currentEmployeeTimesheetData.content[index]);
+                        }
+                    });
+
+                    if (modifiedTimesheetData.length === 0) {
+                        alert('No changes to save.');
+                        return;
+                    }
+
+                    saveButton.textContent = 'Saving...';
+                    saveButton.disabled = true;
+                    cancelButton.disabled = true;
+
+                    showLoadingNotification('Saving timesheet changes...');
+
+                    try {
+                        const response = await fetch(webhookURLs['updateEmployeeTimesheetData'], {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({
+                                employeeId: currentEmployeeTimesheetData.employee_id,
+                                company: company,
+                                cutoff: selectedCutoff,
+                                month: selectedMonth,
+                                year: selectedYear,
+                                employeeName: currentEmployeeTimesheetData.employee,
+                                timesheetData: modifiedTimesheetData
+                            })
+                        });
+
+                        const result = await response.json();
+
+                        if (response.ok) {
+                            hasUnsavedChanges = false;
+                            modifiedRows.clear();
+
+                            // Update original data to reflect saved state
+                            originalEmployeeTimesheetData = JSON.parse(JSON.stringify(currentEmployeeTimesheetData));
+
+                            saveButton.innerHTML = originalContent;
+                            saveButton.disabled = true;
+                            cancelButton.disabled = false;
+                            window.location.reload();
+                        } else if (result.error) {
+                            alert('Failed to save timesheet changes: ' + result.error);
+                            saveButton.innerHTML = originalContent;
+                            saveButton.disabled = false;
+                            cancelButton.disabled = false;
+                        } else {
+                            alert('An unknown error occurred while saving the timesheet changes.');
+                            saveButton.innerHTML = originalContent;
+                            saveButton.disabled = false;
+                            cancelButton.disabled = false;
+                        }
+                    } catch (error) {
+                        console.error('Error saving timesheet changes:', error);
+                        alert('An error occurred while saving the timesheet changes. Please try again later.');
+                        saveButton.innerHTML = originalContent;
+                        saveButton.disabled = false;
+                        cancelButton.disabled = false;
+                    } finally {
+                        hideLoadingNotification();
+                    }
+                }
+
+            /** Show loading notification */
+            function showLoadingNotification(message) {
+                var notification = document.getElementById('loadingNotification');
+                if (notification) {
+                    var messageSpan = notification.querySelector('span');
+                    if (messageSpan && message) {
+                        messageSpan.textContent = message;
+                    }
+                    notification.className = 'loading-notification active';
+                }
+            }
+
+            /** Hide loading notification */
+            function hideLoadingNotification() {
+                var notification = document.getElementById('loadingNotification');
+                if (notification) {
+                    notification.className = 'loading-notification';
+                }
+            }
+
+            /** Initialize tab functionality */
+            function initTabs() {
+                var tabButtons = document.querySelectorAll('.tab-btn');
+                var tabContents = document.querySelectorAll('.tab-content');
+
+                tabButtons.forEach(function (button) {
+                    button.addEventListener('click', function () {
+                        var targetTab = this.getAttribute('data-tab');
+
+                        tabButtons.forEach(function (btn) {
+                            btn.className = 'tab-btn';
+                        });
+                        tabContents.forEach(function (content) {
+                            content.className = 'tab-content';
+                        });
+
+                        this.className = 'tab-btn active';
+                        var targetContent = document.getElementById(targetTab);
+                        if (targetContent) {
+                            targetContent.className = 'tab-content active';
+                        }
+
+                        // Lazy-load payroll data when switching to payroll tab
+                        if (targetTab === 'tab-payroll' && payrollSummaryData.length === 0 && !payrollSummaryLoading) {
+                            fetchPayrollSummaryData();
+                        }
+
+                        // Lazy-load payslips data when switching to payslips tab
+                        if (targetTab === 'tab-payslips' && payslipsData.length === 0 && !payslipsLoading) {
+                            fetchPayslipsData();
+                        }
+
+                        // Lazy-load journal entry data when switching to journal entry tab
+                        if (targetTab === 'tab-journal-entry' && journalEntryData.length === 0 && !journalEntryLoading) {
+                            loadJournalEntry();
+                        }
+                    });
+                });
+            }
+
+            var payrollSummaryData = [];
+            var payrollSummaryTotals = null;
+            var payrollSummaryLoading = false;
+            var filteredPayrollSummaryData = [];
+            var payrollSummarySearchQuery = '';
+            var payrollSummaryDeptFilter = 'all';
+
+            var payslipsData = [];
+            var payslipsLoading = false;
+            var selectedPayslipIndex = -1;
+
+            var journalEntryData = [];
+            var journalEntryLoading = false;
+
+            /** Format number as currency */
+            function formatCurrency(value) {
+                if (isNaN(value) || value === null || value === undefined) return '-';
+                return value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+            }
+
+            /** Fetch payroll summary data from the webhook */
+            async function fetchPayrollSummaryData() {
+                payrollSummaryLoading = true;
+                var summaryBody = document.getElementById('payrollSummaryBody');
+                var loadingEl = document.getElementById('payrollSummaryLoading');
+                var tableEl = document.getElementById('payrollSummaryTableWrapper');
+
+                if (loadingEl) loadingEl.style.display = 'block';
+                if (tableEl) tableEl.style.display = 'none';
+
+                showLoadingNotification('Loading payroll summary...');
+
+                try {
+                    var response = await fetch(
+                        webhookURLs['getPayrollRegister']
+                        + '?company=' + encodeURIComponent(company)
+                        + '&cutoff=' + encodeURIComponent(selectedCutoff)
+                        + '&month=' + encodeURIComponent(selectedMonth)
+                        + '&year=' + encodeURIComponent(selectedYear), {
+                        method: 'GET',
+                        headers: {'Content-Type': 'application/json'}
+                    });
+
+                    var result = await response.json();
+
+                    if (!response.ok || result.error || !result.result || result.result.length === 0) {
+                        if (loadingEl) loadingEl.innerHTML = '<div class="placeholder-text">No payroll register data available for this period.</div>';
+                        payrollSummaryLoading = false;
+                        return;
+                    }
+
+                    // Handle response structure
+                    if (result.result && Array.isArray(result.result)) {
+                        payrollSummaryData = result.result;
+                        payrollSummaryTotals = result.totals || null;
+                    } else {
+                        payrollSummaryData = Array.isArray(result) ? result : [];
+                        payrollSummaryTotals = null;
+                    }
+
+                    // Sort by employee name
+                    payrollSummaryData.sort(function(a, b) {
+                        var nameA = (a.payrollDetails.employeeName || '').toUpperCase();
+                        var nameB = (b.payrollDetails.employeeName || '').toUpperCase();
+                        if (nameA < nameB) return -1;
+                        if (nameA > nameB) return 1;
+                        return 0;
+                    });
+
+                    filteredPayrollSummaryData = payrollSummaryData.slice();
+                    populatePayrollSummaryDeptFilter();
+                    renderPayrollSummary();
+
+                    if (loadingEl) loadingEl.style.display = 'none';
+                    if (tableEl) tableEl.style.display = 'block';
+
+                } catch (error) {
+                    console.error('Error fetching payroll summary data:', error);
+                    if (loadingEl) loadingEl.innerHTML = '<div class="placeholder-text">Error loading payroll data. Please try again.</div>';
+                } finally {
+                    payrollSummaryLoading = false;
+                    hideLoadingNotification();
+                }
+            }
+
+            /** Populate department filter for payroll summary */
+            function populatePayrollSummaryDeptFilter() {
+                var departments = {};
+                payrollSummaryData.forEach(function(employee) {
+                    if (employee.payrollDetails.department) {
+                        departments[employee.payrollDetails.department] = true;
+                    }
+                });
+
+                var filterSelect = document.getElementById('payrollSummaryDeptFilter');
+                if (!filterSelect) return;
+
+                // Clear existing options except "All"
+                while (filterSelect.options.length > 1) {
+                    filterSelect.remove(1);
+                }
+
+                var deptArray = Object.keys(departments).sort();
+                deptArray.forEach(function(dept) {
+                    var option = document.createElement('option');
+                    option.value = dept;
+                    option.textContent = dept;
+                    filterSelect.appendChild(option);
+                });
+            }
+
+            /** Filter payroll summary data */
+            function filterPayrollSummaryData() {
+                var searchInput = document.getElementById('payrollSummarySearch');
+                var deptSelect = document.getElementById('payrollSummaryDeptFilter');
+                payrollSummarySearchQuery = searchInput ? searchInput.value.toLowerCase() : '';
+                payrollSummaryDeptFilter = deptSelect ? deptSelect.value : 'all';
+
+                filteredPayrollSummaryData = payrollSummaryData.filter(function(item) {
+                    var name = (item.payrollDetails.employeeName || '').toLowerCase();
+                    var dept = (item.payrollDetails.department || '').toLowerCase();
+                    var acct = (item.payrollDetails.accountNumber || '').toLowerCase();
+
+                    var matchesSearch = !payrollSummarySearchQuery ||
+                        name.indexOf(payrollSummarySearchQuery) !== -1 ||
+                        dept.indexOf(payrollSummarySearchQuery) !== -1 ||
+                        acct.indexOf(payrollSummarySearchQuery) !== -1;
+
+                    var matchesDept = payrollSummaryDeptFilter === 'all' ||
+                        dept === payrollSummaryDeptFilter.toLowerCase();
+
+                    return matchesSearch && matchesDept;
+                });
+
+                renderPayrollSummary();
+            }
+
+            /** Render the payroll summary table */
+            function renderPayrollSummary() {
+                var tbody = document.querySelector('#payrollSummaryTable tbody');
+                if (!tbody) return;
+
+                tbody.innerHTML = '';
+
+                // Update results count
+                var countEl = document.getElementById('payrollSummaryResultsCount');
+                if (countEl) {
+                    var count = filteredPayrollSummaryData.length;
+                    var employeeText = count === 1 ? 'employee' : 'employees';
+                    if (payrollSummarySearchQuery || payrollSummaryDeptFilter !== 'all') {
+                        countEl.textContent = 'Showing ' + count + ' ' + employeeText + ' (filtered from ' + payrollSummaryData.length + ')';
+                    } else {
+                        countEl.textContent = 'Showing ' + count + ' ' + employeeText;
+                    }
+                }
+
+                if (filteredPayrollSummaryData.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="8"><div class="placeholder-text">No employee data available</div></td></tr>';
+                    return;
+                }
+
+                filteredPayrollSummaryData.forEach(function (item) {
+                    var tr = document.createElement('tr');
+
+                    var td1 = document.createElement('td');
+                    td1.textContent = item.payrollDetails.accountNumber || '-';
+
+                    var td2 = document.createElement('td');
+                    td2.className = 'employee-name-cell';
+                    td2.textContent = item.payrollDetails.employeeName || '-';
+
+                    var td3 = document.createElement('td');
+                    td3.textContent = formatCurrency(item.summary.totalGross);
+
+                    var td4 = document.createElement('td');
+                    td4.textContent = formatCurrency(item.summary.grossTaxable);
+
+                    var td5 = document.createElement('td');
+                    td5.textContent = formatCurrency(item.summary.incomeAfterGMB);
+
+                    var td6 = document.createElement('td');
+                    td6.textContent = formatCurrency(item.summary.netPay);
+
+                    var td7 = document.createElement('td');
+                    td7.textContent = formatCurrency(item.summary.amountToTransferInBank);
+
+                    var td8 = document.createElement('td');
+                    td8.textContent = formatCurrency(item.summary.salariesPayable);
+
+                    tr.appendChild(td1);
+                    tr.appendChild(td2);
+                    tr.appendChild(td3);
+                    tr.appendChild(td4);
+                    tr.appendChild(td5);
+                    tr.appendChild(td6);
+                    tr.appendChild(td7);
+                    tr.appendChild(td8);
+                    tbody.appendChild(tr);
+                });
+
+                // Add totals row if available
+                if (payrollSummaryTotals) {
+                    var totalRow = document.createElement('tr');
+                    totalRow.style.fontWeight = 'bold';
+                    totalRow.style.backgroundColor = '#f0f0f0';
+
+                    var tdTotal1 = document.createElement('td');
+                    tdTotal1.textContent = 'TOTAL';
+
+                    var tdTotal2 = document.createElement('td');
+                    tdTotal2.textContent = '';
+
+                    var tdTotal3 = document.createElement('td');
+                    tdTotal3.textContent = formatCurrency(payrollSummaryTotals.summary.totalGross);
+
+                    var tdTotal4 = document.createElement('td');
+                    tdTotal4.textContent = formatCurrency(payrollSummaryTotals.summary.grossTaxable);
+
+                    var tdTotal5 = document.createElement('td');
+                    tdTotal5.textContent = formatCurrency(payrollSummaryTotals.summary.incomeAfterGMB);
+
+                    var tdTotal6 = document.createElement('td');
+                    tdTotal6.textContent = formatCurrency(payrollSummaryTotals.summary.netPay);
+
+                    var tdTotal7 = document.createElement('td');
+                    tdTotal7.textContent = formatCurrency(payrollSummaryTotals.summary.amountToTransferInBank);
+
+                    var tdTotal8 = document.createElement('td');
+                    tdTotal8.textContent = formatCurrency(payrollSummaryTotals.summary.salariesPayable);
+
+                    totalRow.appendChild(tdTotal1);
+                    totalRow.appendChild(tdTotal2);
+                    totalRow.appendChild(tdTotal3);
+                    totalRow.appendChild(tdTotal4);
+                    totalRow.appendChild(tdTotal5);
+                    totalRow.appendChild(tdTotal6);
+                    totalRow.appendChild(tdTotal7);
+                    totalRow.appendChild(tdTotal8);
+                    tbody.appendChild(totalRow);
+                }
+            }
+
+            /** Fetch payslips data from the webhook */
+            async function fetchPayslipsData() {
+                payslipsLoading = true;
+                var loadingEl = document.getElementById('payslipsLoading');
+                var panesEl = document.getElementById('payslipsPanes');
+
+                if (loadingEl) loadingEl.style.display = 'block';
+                if (panesEl) panesEl.style.display = 'none';
+
+                showLoadingNotification('Loading payslips...');
+
+                try {
+                    var response = await fetch(
+                        webhookURLs['getAllPayslips'], {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            company: company,
+                            cutoff: selectedCutoff,
+                            month: selectedMonth,
+                            year: selectedYear
+                        })
+                    });
+
+                    var result = await response.json();
+
+                    if (!response.ok || result.error) {
+                        if (loadingEl) loadingEl.innerHTML = '<div class="placeholder-text">Error loading payslips. Please try again.</div>';
+                        payslipsLoading = false;
+                        return;
+                    }
+
+                    if (result.payslips && Array.isArray(result.payslips)) {
+                        payslipsData = result.payslips
+                            .filter(function(item) {
+                                return Object.keys(item).length > 0;
+                            })
+                            .map(function(item) {
+                                return item.content;
+                            })
+                            .filter(function(item) {
+                                return item !== undefined;
+                            });
+                    } else if (result.result && Array.isArray(result.result)) {
+                        payslipsData = result.result
+                            .filter(function(item) {
+                                return Object.keys(item).length > 0;
+                            })
+                            .map(function(item) {
+                                return item.content || item;
+                            })
+                            .filter(function(item) {
+                                return item !== undefined && (typeof item !== 'object' || Object.keys(item).length > 0);
+                            });
+                    } else {
+                        payslipsData = [];
+                    }
+
+                    if (payslipsData.length === 0) {
+                        if (loadingEl) loadingEl.innerHTML = '<div class="placeholder-text">No payslips available for this period.</div>';
+                        payslipsLoading = false;
+                        return;
+                    }
+
+                    // Sort by employee name
+                    payslipsData.sort(function(a, b) {
+                        var nameA = (a.name || '').toUpperCase();
+                        var nameB = (b.name || '').toUpperCase();
+                        if (nameA < nameB) return -1;
+                        if (nameA > nameB) return 1;
+                        return 0;
+                    });
+
+                    renderPayslipsList();
+                    selectPayslip(0);
+
+                    if (loadingEl) loadingEl.style.display = 'none';
+                    if (panesEl) panesEl.style.display = 'flex';
+
+                } catch (error) {
+                    console.error('Error fetching payslips data:', error);
+                    if (loadingEl) loadingEl.innerHTML = '<div class="placeholder-text">Error loading payslips. Please try again.</div>';
+                } finally {
+                    payslipsLoading = false;
+                    hideLoadingNotification();
+                }
+            }
+
+            /** Render the payslips list on left pane */
+            function renderPayslipsList() {
+                var listPane = document.getElementById('payslipsListPane');
+                if (!listPane) return;
+
+                listPane.innerHTML = '';
+
+                payslipsData.forEach(function(payslip, index) {
+                    var item = document.createElement('div');
+                    item.className = 'payslip-list-item' + (index === selectedPayslipIndex ? ' active' : '');
+                    var statusIcon = payslip.isReceived ? '<span class="status-icon material-symbols-outlined">check_circle</span>' : '<span class="status-icon material-symbols-outlined pending">pending</span>';
+                    item.innerHTML = statusIcon + escapeHtml(payslip.name || '-');
+                    item.addEventListener('click', function() {
+                        selectPayslip(index);
+                    });
+                    listPane.appendChild(item);
+                });
+            }
+
+            /** Select a payslip and show details */
+            function selectPayslip(index) {
+                if (index < 0 || index >= payslipsData.length) return;
+
+                selectedPayslipIndex = index;
+
+                // Update list highlighting
+                var items = document.querySelectorAll('#payslipsListPane .payslip-list-item');
+                items.forEach(function(item, idx) {
+                    if (idx === index) {
+                        item.classList.add('active');
+                    } else {
+                        item.classList.remove('active');
+                    }
+                });
+
+                // Render detail pane
+                renderPayslipDetail(payslipsData[index]);
+            }
+
+            /** Render payslip detail on right pane */
+            function renderPayslipDetail(payslip) {
+                var detailPane = document.getElementById('payslipsDetailPane');
+                if (!detailPane) return;
+
+                var c = '';
+
+                c += '<div class="payslip-detail-header">';
+                c += '<h3>' + escapeHtml(payslip.name || '-') + '</h3>';
+                c += '<p class="payslip-subtitle">Payslip for ' + escapeHtml(payslip.payPeriod.month || '-') + ' ' + escapeHtml(payslip.payPeriod.cutoff || '-') + ', ' + escapeHtml(String(payslip.payPeriod.year || '-')) + '</p>';
+
+                // Receipt Status
+                var receiptStatusText = '';
+                var receiptIconClass = '';
+                if (payslip.isReceived) {
+                    receiptStatusText = 'Received on ' + escapeHtml(formatCacheTimestampFull(payslip.receiptDate) || '-');
+                    receiptIconClass = '';
+                } else {
+                    receiptStatusText = 'Pending receipt';
+                    receiptIconClass = 'pending';
+                }
+                c += '<div class="payslip-receipt-status">';
+                c += '<span class="payslip-receipt-icon material-symbols-outlined ' + receiptIconClass + '">' + (payslip.isReceived ? 'check_circle' : 'pending') + '</span>';
+                c += '<span>' + receiptStatusText + '</span>';
+                c += '</div>';
+                c += '</div>';
+
+                c += '<div class="payslip-two-col">';
+
+                // ===== LEFT COLUMN: Salary + Additions + Gross Pay =====
+                c += '<div class="payslip-col payslip-col-left">';
+
+                // Salary Details
+                c += '<div class="payslip-row"><span class="payslip-row-label">Total Basic Wage this Cutoff</span><span class="payslip-row-value">' + formatCurrency(payslip.salaryDetails.totalBasicWage) + '</span></div>';
+                c += '<div class="payslip-row"><span class="payslip-row-label">Allowances</span><span class="payslip-row-value">' + formatCurrency(payslip.salaryDetails.allowances) + '</span></div>';
+                c += '<div class="payslip-row total"><span class="payslip-row-label">Total Salary</span><span class="payslip-row-value">' + formatCurrency(payslip.salaryDetails.totalSalary) + '</span></div>';
+
+                c += '<div class="payslip-spacer"></div>';
+
+                // Additions to Compensation
+                c += '<div class="payslip-section-title">ADDITIONS TO COMPENSATION</div>';
+                c += '<div class="payslip-row"><span class="payslip-row-label">Taxable Commission</span><span class="payslip-row-value">' + formatCurrency(payslip.additions.commissionTaxable) + '</span></div>';
+                c += '<div class="payslip-row"><span class="payslip-row-label">Taxable Incentive</span><span class="payslip-row-value">' + formatCurrency(payslip.additions.incentiveTaxable) + '</span></div>';
+                c += '<div class="payslip-row"><span class="payslip-row-label">Other Adjustments</span><span class="payslip-row-value">' + formatCurrency(payslip.additions.otherAdjustments) + '</span></div>';
+                c += '<div class="payslip-row"><span class="payslip-row-label">Night Differential</span><span class="payslip-row-value">' + formatCurrency(payslip.additions.nightDifferential) + '</span></div>';
+                c += '<div class="payslip-row"><span class="payslip-row-label">OT Holiday</span><span class="payslip-row-value">' + formatCurrency(payslip.additions.overtimeHoliday) + '</span></div>';
+                c += '<div class="payslip-row"><span class="payslip-row-label">OT Special Holiday</span><span class="payslip-row-value">' + formatCurrency(payslip.additions.overtimeSpecialHoliday) + '</span></div>';
+                c += '<div class="payslip-row"><span class="payslip-row-label">OT Regular</span><span class="payslip-row-value">' + formatCurrency(payslip.additions.overtimeRegular) + '</span></div>';
+                c += '<div class="payslip-row"><span class="payslip-row-label">OT Rest Day</span><span class="payslip-row-value">' + formatCurrency(payslip.additions.overtimeRestDay) + '</span></div>';
+
+                c += '<div class="payslip-spacer"></div>';
+
+                c += '<div class="payslip-row"><span class="payslip-row-label">Accrued 13th Month Pay for the Period</span><span class="payslip-row-value">' + formatCurrency(payslip.additions.accrued13thMonthPay) + '</span></div>';
+                c += '<div class="payslip-row total"><span class="payslip-row-label">Total Additions</span><span class="payslip-row-value">' + formatCurrency(payslip.additions.totalAdditions) + '</span></div>';
+
+                c += '<div class="payslip-row grand-total"><span class="payslip-row-label">Gross Pay</span><span class="payslip-row-value">' + formatCurrency(payslip.grossPay) + '</span></div>';
+
+                c += '</div>'; // end left col
+
+                // ===== RIGHT COLUMN: Deductions + Govt + Liabilities + Net Pay =====
+                c += '<div class="payslip-col">';
+
+                // Deductions to Compensation
+                c += '<div class="payslip-section-title">DEDUCTIONS TO COMPENSATION</div>';
+                c += '<div class="payslip-row"><span class="payslip-row-label">Absences</span><span class="payslip-row-value">' + formatCurrency(payslip.deductions.absences) + '</span></div>';
+                c += '<div class="payslip-row"><span class="payslip-row-label">Tardiness</span><span class="payslip-row-value">' + formatCurrency(payslip.deductions.tardiness) + '</span></div>';
+                c += '<div class="payslip-row"><span class="payslip-row-label">Other</span><span class="payslip-row-value">' + formatCurrency(payslip.deductions.other) + '</span></div>';
+
+                c += '<div class="payslip-spacer"></div>';
+
+                // Government Contributions
+                c += '<div class="payslip-section-title">GOVERNMENT CONTRIBUTIONS</div>';
+                c += '<div class="payslip-row"><span class="payslip-row-label">SSS Contribution</span><span class="payslip-row-value">' + formatCurrency(payslip.governmentContributions.sss) + '</span></div>';
+                c += '<div class="payslip-row"><span class="payslip-row-label">Philhealth Contribution</span><span class="payslip-row-value">' + formatCurrency(payslip.governmentContributions.philhealth) + '</span></div>';
+                c += '<div class="payslip-row"><span class="payslip-row-label">Pagibig Contribution</span><span class="payslip-row-value">' + formatCurrency(payslip.governmentContributions.pagibig) + '</span></div>';
+                c += '<div class="payslip-row"><span class="payslip-row-label">Withholding Tax</span><span class="payslip-row-value">' + formatCurrency(payslip.governmentContributions.withholdingTax) + '</span></div>';
+
+                c += '<div class="payslip-spacer"></div>';
+
+                // Employee Liabilities
+                c += '<div class="payslip-section-title">EMPLOYEE LIABILITIES</div>';
+                c += '<div class="payslip-row"><span class="payslip-row-label">SSS Salary Loan</span><span class="payslip-row-value">' + formatCurrency(payslip.employeeLiabilities.sssSalaryLoan) + '</span></div>';
+                c += '<div class="payslip-row"><span class="payslip-row-label">SSS Calamity Loan</span><span class="payslip-row-value">' + formatCurrency(payslip.employeeLiabilities.sssCalamityLoan) + '</span></div>';
+                c += '<div class="payslip-row"><span class="payslip-row-label">Pagibig MPL</span><span class="payslip-row-value">' + formatCurrency(payslip.employeeLiabilities.pagibigMPL) + '</span></div>';
+                c += '<div class="payslip-row"><span class="payslip-row-label">Pagibig CL</span><span class="payslip-row-value">' + formatCurrency(payslip.employeeLiabilities.pagibigCL) + '</span></div>';
+
+                c += '<div class="payslip-row total"><span class="payslip-row-label">Total Deductions</span><span class="payslip-row-value">' + formatCurrency(payslip.totalDeductions) + '</span></div>';
+
+                c += '<div class="payslip-row grand-total"><span class="payslip-row-label">Net Pay</span><span class="payslip-row-value">' + formatCurrency(payslip.netPay) + '</span></div>';
+
+                c += '</div>'; // end right col
+
+                c += '</div>'; // end payslip-two-col
+
+                detailPane.innerHTML = c;
+            }
+
+                /**
+                 * Initialize the page
+                 */
+                function init() {
+                    // Initialize tabs
+                    initTabs();
+
+                    // Initialize filtered data with all data
+                    filteredData = employeeData.slice();
+
+                    // Set default month/year in date picker
+                    const dateInput = document.getElementById('monthYearPicker');
+                    dateInput.value = formatMonthYear(selectedMonth, selectedYear);
+
+
+                    // Set default cutoff in cutoff filter
+                    const cutoffFilter = document.getElementById('cutoffFilter');
+                    cutoffFilter.value = selectedCutoff;
+
+                    // Populate department filter
+                    populateDepartmentFilter();
+
+                    // Render initial table
+                    renderTable();
+
+                    // Attach event listeners for search
+                    const searchInput = document.getElementById("searchInput");
+                    searchInput.addEventListener("input", filterData);
+
+                    // Attach event listeners for department filter
+                    const departmentFilter = document.getElementById("departmentFilter");
+                    departmentFilter.addEventListener("change", filterData);
+
+                    // Attach event listeners for sortable headers
+                    const sortableHeaders = document.querySelectorAll(".payroll-table th.sortable");
+                    sortableHeaders.forEach(function (header) {
+                        header.addEventListener("click", function () {
+                            sortData(header.dataset.column);
+                        });
+                    });
+
+                    // Update cache timestamp display
+                    const cacheTimestampEl = document.getElementById('cacheTimestamp');
+                    if (cacheTimestampEl) {
+                        const timestampSpan = cacheTimestampEl.querySelector('span:last-child');
+                        if (timestampSpan) {
+                            timestampSpan.textContent = 'Cache last updated: ' + formatCacheTimestamp(cacheLastUpdated);
+                            cacheTimestampEl.title = formatCacheTimestampFull(cacheLastUpdated);
+                        }
+                    }
+
+                    // Attach event listeners for action buttons
+                    const forceRefreshBtn = document.getElementById("forceRefreshBtn");
+                    forceRefreshBtn.addEventListener("click", clickForceRefresh);
+
+                    // Disable Force Refresh if timesheet has already been approved
+                    if (selectedCutoffApproved) {
+                        forceRefreshBtn.disabled = true;
+                        forceRefreshBtn.title = "Cannot refresh cache: Timesheet data has already been approved for this cutoff.";
+                    }
+
+                    // Conditionally attach listeners based on user type
+                    if (iseuser) {
+                        document.getElementById("confirmTimesheetBtn").addEventListener("click", clickConfirmTimesheet);
+
+                        // Attach confirm modal event listeners
+                        document.getElementById('closeConfirmModalBtn').addEventListener('click', closeConfirmModal);
+                        document.getElementById('cancelConfirmBtn').addEventListener('click', closeConfirmModal);
+                        document.getElementById('confirmBtn').addEventListener('click', confirmTimesheetData);
+
+                        // Close confirm modal when clicking outside
+                        document.getElementById('confirmTimesheetModal').addEventListener('click', function (e) {
+                            if (e.target === this) {
+                                closeConfirmModal();
+                            }
+                        });
+
+                        // Update button disabled state based on selectedCutoffApproved
+                        const confirmTimesheetBtn = document.getElementById('confirmTimesheetBtn');
+                        confirmTimesheetBtn.disabled = selectedCutoffApproved;
+                        if (confirmTimesheetBtn.disabled) {
+                            confirmTimesheetBtn.title = "Timesheet data has already been confirmed for this cutoff.";
+                        }
+                    } else {
+                        document.getElementById("executePayrollBtn").addEventListener("click", clickExecutePayroll);
+
+                        // Update button disabled state - disable if NOT approved
+                        const executePayrollBtn = document.getElementById('executePayrollBtn');
+                        executePayrollBtn.disabled = !selectedCutoffApproved;
+                        if (executePayrollBtn.disabled) {
+                            executePayrollBtn.title = "Cannot execute payroll run until end user confirms timesheet data for this cutoff.";
+                        }
+                    }
+
+                    document.getElementById("viewDateBtn").addEventListener("click", changeDate);
+
+                    // Attach event listeners for pagination
+                    document.getElementById("prevPageBtn").addEventListener("click", function () {
+                        goToPage(currentPage - 1);
+                    });
+                    document.getElementById("nextPageBtn").addEventListener("click", function () {
+                        goToPage(currentPage + 1);
+                    });
+                    document.getElementById("firstPageBtn").addEventListener("click", function () {
+                        goToPage(1);
+                    });
+                    document.getElementById("lastPageBtn").addEventListener("click", function () {
+                        const totalPages = Math.ceil(filteredData.length / pageSize);
+                        goToPage(totalPages);
+                    });
+                    document.getElementById("pageSizeSelect").addEventListener("change", changePageSize);
+
+                    // Attach modal event listeners
+                    document.getElementById('closeModalBtn').addEventListener('click', closeEmployeeModal);
+                    document.getElementById('cancelTimesheetBtn').addEventListener('click', closeEmployeeModal);
+                    document.getElementById('saveTimesheetBtn').addEventListener('click', saveTimesheetChanges);
+
+                    // Close modal when clicking outside
+                    document.getElementById('employeeModal').addEventListener('click', function (e) {
+                        if (e.target === this) {
+                            closeEmployeeModal();
+                        }
+                    });
+                }
+
+                /**
+                 * Toggle the cutoff progress stepper popover
+                 */
+                function toggleStepperPopover() {
+                    var popover = document.getElementById('stepperPopover');
+                    var backdrop = document.getElementById('stepperBackdrop');
+                    var isVisible = popover.classList.contains('show');
+
+                    if (isVisible) {
+                        popover.classList.remove('show');
+                        backdrop.classList.remove('show');
+                    } else {
+                        updateStepperStatus();
+                        popover.classList.add('show');
+                        backdrop.classList.add('show');
+                    }
+                }
+
+                /**
+                 * Close the cutoff progress stepper popover
+                 */
+                function closeStepperPopover() {
+                    var popover = document.getElementById('stepperPopover');
+                    var backdrop = document.getElementById('stepperBackdrop');
+                    popover.classList.remove('show');
+                    backdrop.classList.remove('show');
+                }
+
+                /**
+                 * Update stepper step statuses based on current state
+                 */
+                function updateStepperStatus() {
+                    var steps = [
+                        { id: 'stepTimesheet', done: selectedCutoffApproved },
+                        { id: 'stepPayroll', done: selectedCutoffPRExecuted },
+                        // FIXME: these are placeholders
+                        { id: 'stepDisbursement', done: selectedCutoffDisbursed },
+                        { id: 'stepPayslips', done: selectedCutoffPayslipsSent }
+                    ];
+
+                    steps.forEach(function (step) {
+                        var el = document.getElementById(step.id);
+                        if (!el) return;
+                        var icon = el.querySelector('.stepper-icon .material-symbols-outlined');
+                        if (step.done) {
+                            el.className = 'stepper-item completed';
+                            icon.textContent = 'check';
+                        } else {
+                            el.className = 'stepper-item pending';
+                            icon.textContent = 'radio_button_unchecked';
+                        }
+                    });
+                }
+
+                // Run when DOM is fully loaded
+                document.addEventListener("DOMContentLoaded", init);
+        </script>
+    </head>
+
+    <body>
+        <div id="loadingNotification" class="loading-notification">
+            <div class="loading-spinner"></div>
+            <span>Loading...</span>
+        </div>
+
+        <div class="container">
+            <header>
+                <h2>
+                    <a
+                        href="#"
+                        onclick="
+                            window.location.href = window.location.origin + window.location.pathname;
+                            return false;
+                        "
+                        style="all: unset; cursor: pointer"
+                    >
+                        Payroll Sheet
+                    </a>
+                </h2>
+                <div class="subtitle">
+                    Cutoff 1 of March 2026
+                </div>
+            </header>
+            <main>
+                <div class="actions">
+                    <div style="display: flex; flex-direction: column; gap: 4px">
+                        <div id="cacheTimestamp" class="cache-timestamp">
+                            <span class="material-symbols-outlined">cloud_done</span>
+                            <span>Cache last updated: Loading...</span>
+                        </div>
+                        <div>
+                            <button id="forceRefreshBtn" class="btn btn-secondary">
+                                <span class="material-symbols-outlined">refresh</span>
+                                Force Refresh List
+                            </button>
+                            <script>
+                                if (iseuser) {
+                                    document.write(
+                                        '<button id="confirmTimesheetBtn" class="btn btn-primary"><span class="material-symbols-outlined">check_circle</span>Confirm Timesheet Data</button>',
+                                    );
+                                } else {
+                                    document.write(
+                                        '<button id="executePayrollBtn" class="btn btn-primary"><span class="material-symbols-outlined">order_play</span>View Payroll Register</button>',
+                                    );
+                                }
+                            </script>
+                        </div>
+                    </div>
+                    <div class="date-picker-box">
+                        <span style="position: relative; display: inline-flex">
+                            <button class="stepper-toggle" onclick="toggleStepperPopover()" title="Cutoff progress">
+                                <span class="material-symbols-outlined">done_outline</span>
+                            </button>
+                            <div id="stepperPopover" class="stepper-popover">
+                                <div class="stepper-popover-title">Cutoff Progress</div>
+                                <ul class="stepper-list">
+                                    <li id="stepTimesheet" class="stepper-item pending">
+                                        <div class="stepper-icon">
+                                            <span class="material-symbols-outlined">radio_button_unchecked</span>
+                                        </div>
+                                        <span class="stepper-label">Timesheet approved</span>
+                                    </li>
+                                    <li id="stepPayroll" class="stepper-item pending">
+                                        <div class="stepper-icon">
+                                            <span class="material-symbols-outlined">radio_button_unchecked</span>
+                                        </div>
+                                        <span class="stepper-label">Payroll register confirmed</span>
+                                    </li>
+                                    <li id="stepDisbursement" class="stepper-item pending">
+                                        <div class="stepper-icon">
+                                            <span class="material-symbols-outlined">radio_button_unchecked</span>
+                                        </div>
+                                        <span class="stepper-label">Disbursement completed</span>
+                                    </li>
+                                    <li id="stepPayslips" class="stepper-item pending">
+                                        <div class="stepper-icon">
+                                            <span class="material-symbols-outlined">radio_button_unchecked</span>
+                                        </div>
+                                        <span class="stepper-label">Payslips sent</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div id="stepperBackdrop" class="stepper-backdrop" onclick="closeStepperPopover()"></div>
+                        </span>
+                        <input type="month" id="monthYearPicker" />
+                        <select id="cutoffFilter">
+                            <option value="Q1">Cutoff 1</option>
+                            <option value="Q2">Cutoff 2</option>
+                        </select>
+                        <button id="viewDateBtn" class="btn btn-primary">
+                            <span class="material-symbols-outlined">visibility</span>
+                            View
+                        </button>
+                    </div>
+                </div>
+
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="tab-timesheet">Timesheet</button>
+                    <button class="tab-btn" data-tab="tab-payroll">Payroll</button>
+                    <button class="tab-btn" data-tab="tab-payslips">Payslips</button>
+                    <button class="tab-btn" data-tab="tab-journal-entry">Journal Entry</button>
+                </div>
+
+                <div id="tab-timesheet" class="tab-content active">
+                    <div class="controls">
+                        <div class="search-box">
+                            <span class="material-symbols-outlined">search</span>
+                            <input
+                                type="text"
+                                id="searchInput"
+                                placeholder="Search by name, ID, department, or role..."
+                            />
+                        </div>
+                        <div class="filter-box">
+                            <span class="material-symbols-outlined">filter_list</span>
+                            <select id="departmentFilter">
+                                <option value="all">All Departments</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="resultsCount" class="results-count">Loading...</div>
+
+                    <table class="payroll-table">
+                        <thead>
+                            <tr>
+                                <th class="sortable" data-column="employee">Employee Information</th>
+                                <th class="sortable" data-column="totalWorkingTime">Total Working Time</th>
+                                <th class="sortable" data-column="totalAbsents">Total Absents</th>
+                                <th class="sortable" data-column="totalLatesAndUndertimes">
+                                    Total Late/Undertime (min)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+
+                    <div class="pagination-container">
+                        <div class="page-size-selector">
+                            <label for="pageSizeSelect">Rows per page:</label>
+                            <select id="pageSizeSelect">
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                        </div>
+                        <div class="pagination-info" id="paginationInfo">Page 1 of 1</div>
+                        <div class="pagination-controls">
+                            <button id="firstPageBtn" class="pagination-btn" title="First page">
+                                <span class="material-symbols-outlined">first_page</span>
+                            </button>
+                            <button id="prevPageBtn" class="pagination-btn" title="Previous page">
+                                <span class="material-symbols-outlined">chevron_left</span>
+                            </button>
+                            <div id="paginationNumbers"></div>
+                            <button id="nextPageBtn" class="pagination-btn" title="Next page">
+                                <span class="material-symbols-outlined">chevron_right</span>
+                            </button>
+                            <button id="lastPageBtn" class="pagination-btn" title="Last page">
+                                <span class="material-symbols-outlined">last_page</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-payroll" class="tab-content">
+                    <div id="payrollSummaryLoading">
+                        <div class="placeholder-text">
+                            Please wait while we load the payroll register summary data...
+                        </div>
+                    </div>
+                    <div id="payrollSummaryTableWrapper" style="display: none">
+                        <div
+                            style="display: flex; gap: 12px; align-items: center; margin-bottom: 20px; flex-wrap: wrap"
+                        >
+                            <div class="search-container">
+                                <input
+                                    type="text"
+                                    id="payrollSummarySearch"
+                                    class="search-input"
+                                    placeholder="Search employee names, account numbers..."
+                                    oninput="filterPayrollSummaryData()"
+                                />
+                            </div>
+                            <div class="filter-box">
+                                <span class="material-symbols-outlined">filter_list</span>
+                                <select id="payrollSummaryDeptFilter" onchange="filterPayrollSummaryData()">
+                                    <option value="all">All Departments</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="payrollSummaryResultsCount" class="results-count"></div>
+                        <div class="table-wrapper">
+                            <table id="payrollSummaryTable">
+                                <thead>
+                                    <tr>
+                                        <th>Account Number</th>
+                                        <th>Full Name</th>
+                                        <th>Total Gross</th>
+                                        <th>Gross Taxable</th>
+                                        <th>Income after GMB</th>
+                                        <th>Net Pay</th>
+                                        <th>Amount to Transfer in Bank</th>
+                                        <th>Salaries Payable</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="8">
+                                            <div class="placeholder-text">Employee data will appear here</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-payslips" class="tab-content">
+                    <div id="payslipsLoading">
+                        <div class="placeholder-text">Please wait while we load the payslips data...</div>
+                    </div>
+                    <div id="payslipsPanes" style="display: none">
+                        <div id="payslipsListPane"></div>
+                        <div id="payslipsDetailPane">
+                            <div class="payslip-detail-placeholder">
+                                Select an employee from the list to view their payslip
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-journal-entry" class="tab-content">
+                    <div class="table-wrapper journal-entry-table-wrapper">
+                        <table id="journalEntryTable" class="journal-entry-table">
+                            <thead>
+                                <tr>
+                                    <th>Account</th>
+                                    <th>Description</th>
+                                    <th class="numeric-column">Debit</th>
+                                    <th class="numeric-column">Credit</th>
+                                </tr>
+                            </thead>
+                            <tbody id="journalEntryTableBody">
+                                </tbody>
+                        </table>
+                    </div>
+                    <div id="journalEntryPlaceholder" class="placeholder-text">No journal entry data available</div>
+                </div>
+            </main>
+        </div>
+
+        <div id="employeeModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalEmployeeName">Employee Timesheet</h3>
+                    <button id="closeModalBtn" class="modal-close">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                <div id="modalBody" class="modal-body">
+                    </div>
+                <div class="modal-footer">
+                    <button id="cancelTimesheetBtn" class="btn btn-secondary">Cancel</button>
+                    <button id="bulkEditBtn" class="btn btn-secondary" onclick="bulkEditColumn()">
+                        <span class="material-symbols-outlined">edit_note</span>
+                        Bulk Edit
+                    </button>
+                    <button id="saveTimesheetBtn" class="btn btn-primary" disabled>
+                        <span class="material-symbols-outlined">save</span>
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="confirmTimesheetModal" class="modal">
+            <div class="modal-content" style="max-width: 500px">
+                <div class="modal-header">
+                    <h3>Confirm Timesheet Data</h3>
+                    <button id="closeConfirmModalBtn" class="modal-close">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure the timesheet contents are correct?</p>
+                    <p style="color: #d32f2f; font-weight: 500; margin-top: 16px">
+                        <span class="material-symbols-outlined" style="vertical-align: middle; font-size: 20px"
+                            >warning</span
+                        >
+                        You will be unable to edit the timesheet once you have confirmed it.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button id="cancelConfirmBtn" class="btn btn-secondary">Cancel</button>
+                    <button id="confirmBtn" class="btn btn-primary">
+                        <span class="material-symbols-outlined">check_circle</span>
+                        Confirm
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="bulkEditModal" class="modal" onclick="if (event.target === this) closeBulkEditModal();">
+            <div class="modal-content" style="max-width: 500px">
+                <div class="modal-header">
+                    <h3>Bulk Edit Column</h3>
+                    <button class="modal-close" onclick="closeBulkEditModal()">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="bulkEditColumnSelect">Select Column</label>
+                        <select id="bulkEditColumnSelect">
+                            <option value="">-- Choose a column --</option>
+                            <option value="absent">Absent</option>
+                            <option value="lateUndertime">Late/Undertime</option>
+                            <option value="nightDifferential">Night Differential</option>
+                            <option value="otHoliday">Holiday</option>
+                            <option value="otSpecialHoliday">Special Holiday</option>
+                            <option value="otRegular">Regular</option>
+                            <option value="otRest">Rest</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="bulkEditValue">Value</label>
+                        <input type="number" id="bulkEditValue" step="0.5" value="0" />
+                        <div class="help-text">This value will be applied to all rows in the selected column</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="closeBulkEditModal()">Cancel</button>
+                    <button class="btn btn-primary" onclick="applyBulkEdit()">
+                        <span class="material-symbols-outlined">done_all</span>
+                        Apply to All
+                    </button>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
