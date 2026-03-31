@@ -676,7 +676,7 @@
         sil_amount:    get('sil_amount') || '0',
         start_time:    get('start_time'),
         end_time:      get('end_time'),
-        reason:        get('reason'),
+        reason:        get('reason') || "", // Explicitly returns "" if left blank
         company_id:    get('company_id'),
       };
 
